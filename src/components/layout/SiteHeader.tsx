@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { Fleuron } from "@/components/decor/Ornaments";
+import { TwinStars } from "@/components/decor/Ornaments";
 import { useLocale } from "@/i18n/locale";
 import { SECTIONS } from "./sections";
 import { LanguageToggle } from "./LanguageToggle";
@@ -27,9 +27,8 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <a href="#home" className="flex items-center gap-2" aria-label="Emily Wingler Gonçalves">
-          <span className="flex h-9 w-9 items-center justify-center gap-1 text-primary" aria-hidden="true">
-            <Fleuron className="h-5 w-5 shrink-0" />
-            <Fleuron className="h-3 w-3 shrink-0" />
+          <span className="flex h-9 w-9 items-center justify-center text-primary" aria-hidden="true">
+            <TwinStars className="h-8 w-8 shrink-0" />
           </span>
           <span className="hidden font-display text-lg italic text-foreground sm:inline">Emily Wingler</span>
         </a>
