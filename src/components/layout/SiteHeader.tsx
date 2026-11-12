@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Fleuron } from "@/components/decor/Ornaments";
 import { useLocale } from "@/i18n/locale";
 import { SECTIONS } from "./sections";
 import { LanguageToggle } from "./LanguageToggle";
 
 /**
- * Sticky header: monogram, section links (in-page anchors) and language toggle.
+ * Sticky header: two stars, section links (in-page anchors) and language toggle.
  * Below `md` the links collapse into a disclosure menu (button + list), which
  * is simpler and more accessible than a full drawer for six links.
  */
@@ -26,7 +27,10 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <a href="#home" className="flex items-center gap-2" aria-label="Emily Wingler Gonçalves">
-          <span className="grid h-9 w-9 place-items-center rounded-full border border-primary font-masthead text-lg text-primary">EW</span>
+          <span className="flex h-9 w-9 items-center justify-center gap-1 text-primary" aria-hidden="true">
+            <Fleuron className="h-5 w-5 shrink-0" />
+            <Fleuron className="h-3 w-3 shrink-0" />
+          </span>
           <span className="hidden font-display text-lg italic text-foreground sm:inline">Emily Wingler</span>
         </a>
         <nav aria-label={t.nav.label} className="hidden md:block">
