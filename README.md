@@ -35,3 +35,6 @@ Dark Academia bilingual portfolio. See `docs/ARCHITECTURE.md` for structure and 
 - Edit interface text: `src/i18n/messages.ts`
 - Edit colors/fonts: `src/styles.css`
 - Run: `bun install && bun run dev`; tests: `bunx vitest run`
+
+## Skills catalog
+Edit `src/content/skills.ts`. Leave `level` unset unless confirmed; `seeAlso` takes experience ids.

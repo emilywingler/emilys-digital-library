@@ -28,7 +28,7 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
 
   return (
     <div>
-      <div className="scroll-fade-right overflow-x-auto pr-10 pt-2 md:[mask-image:none] md:pr-0">
+      <div className="scroll-fade-right scrollbar-archive overflow-x-auto pr-10 pt-2 md:[mask-image:none] md:pr-0">
         <div role="tablist" aria-label={label} className="flex min-w-max items-end">
           {items.map((it, i) => {
             const active = open === i;

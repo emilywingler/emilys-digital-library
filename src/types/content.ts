@@ -36,3 +36,28 @@ export interface ExperienceEntry {
   organization: string;
   bullets: LocalizedText[];
 }
+
+/** Descriptive familiarity label. Never a percentage; only set when Emily confirms it. */
+export type SkillLevel = "familiarity" | "developing" | "practical";
+
+/** One index card in the Skills catalog. */
+export interface SkillEntry {
+  /** Catalog reference, e.g. "PRG-01". Unique across the catalog. */
+  code: string;
+  /** Name as written in the CV (pt). */
+  name: string;
+  /** English name, when it differs. */
+  nameEn?: string;
+  description: LocalizedText;
+  /** Ids of {@link ExperienceEntry} whose CV bullets name this skill. */
+  seeAlso?: string[];
+  level?: SkillLevel;
+}
+
+/** One catalog drawer. */
+export interface SkillCategory {
+  id: string;
+  code: string;
+  label: LocalizedText;
+  skills: SkillEntry[];
+}

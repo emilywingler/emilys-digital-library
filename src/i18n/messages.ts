@@ -26,6 +26,7 @@ const pt = {
   },
   placeholder: { soon: "Capítulo em preparação" },
   experience: { title: "Experiência", kicker: "Arquivo", hint: "Selecione uma pasta", education: "Formação acadêmica", tabsLabel: "Pastas de experiência" },
+  skills: { title: "Habilidades", kicker: "Catálogo", drawersLabel: "Gavetas do catálogo de habilidades", seeAlso: "Ver em", levels: { familiarity: "Familiaridade", developing: "Em desenvolvimento", practical: "Experiência prática" } },
 };
 
 export type Messages = typeof pt;
@@ -54,6 +55,7 @@ const en: Messages = {
   },
   placeholder: { soon: "Chapter in preparation" },
   experience: { title: "Experience", kicker: "Archive", hint: "Select a folder", education: "Academic education", tabsLabel: "Experience folders" },
+  skills: { title: "Skills", kicker: "Catalog", drawersLabel: "Skills catalog drawers", seeAlso: "See", levels: { familiarity: "Familiarity", developing: "Developing", practical: "Practical experience" } },
 };
 
 export const messages: Record<"pt" | "en", Messages> = { pt, en };

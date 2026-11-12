@@ -34,4 +34,5 @@ use the editor.
 - Visitor-facing content lives in `src/content/` as `{ pt, en }` typed data passed via props — allows swapping to a database later without touching components.
 - All design tokens live in `src/styles.css`; components use semantic classes only — single place to retheme.
 - Decorative SVGs go in `src/components/decor/`, aria-hidden, using currentColor — keeps decoration separate from content.
-- Tabbed sections reuse `src/components/folder/FolderTabs.tsx` (WAI-ARIA tabs, starts closed); CV text in content data is copied verbatim — keeps invented facts out.
+- Experience uses `src/components/folder/FolderTabs.tsx` (custom tabs, starts closed); Skills uses Radix Tabs in `src/components/skills/CardCatalog.tsx` (manual activation, first drawer open, orientation follows viewport); CV text in content data is copied verbatim — keeps invented facts out.
+- Custom scrollbars apply only to `html` and elements with the `scrollbar-archive` utility, on fine pointers — phones keep native scrollbars.
