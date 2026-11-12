@@ -53,3 +53,13 @@ docs/ARCHITECTURE.md
 ## Questions (answer anytime)
 - Default language: Portuguese at `/` OK?
 - Do you have texts/images for Olist and RotaLeve? (needed by milestone 5)
+
+## Confirmed decisions
+Portuguese at `/`, English at `/en`; fonts approved; no new dependencies; phone hidden; only real links (GitHub github.com/emilywingler, LinkedIn linkedin.com/in/emily-wingler, email wingleremily@gmail.com); future-section placeholders are discreet, low-height labeled stubs below the Home so they never affect its composition.
+
+## Home intro text for approval (taken only from your CV)
+PT: "Graduanda em Engenharia de Computação na UFES, com experiência em Python, Machine Learning, IA aplicada e análise de dados. Atuei na Compass UOL com Python, AWS e LLMs, e na UFES com análise de dados institucionais. Tenho interesse em desenvolvimento de software, engenharia de dados, inteligência artificial e segurança da informação, com foco em aprendizado contínuo e na aplicação prática de tecnologias."
+
+EN: "Computer Engineering undergraduate at UFES with experience in Python, Machine Learning, applied AI and data analysis. I worked at Compass UOL with Python, AWS and LLMs, and at UFES with institutional data analysis. I'm interested in software development, data engineering, artificial intelligence and information security, with a focus on continuous learning and the practical application of technology."
+
+The text lives in one content file, so you can edit it anytime.
