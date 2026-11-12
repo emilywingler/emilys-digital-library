@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useId, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 
 export interface FolderItem {
   id: string;
@@ -21,15 +21,21 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
 
   const move = (i: number) => { const n = (i + items.length) % items.length; setFocus(n); refs.current[n]?.focus(); };
   const onKey = (e: KeyboardEvent, i: number) => {
-    const map: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: items.length - 1 };
+    const map: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, ArrowDown: i + 1, ArrowUp: i - 1, Home: 0, End: items.length - 1 };
     const next = map[e.key]; if (next !== undefined) { e.preventDefault(); move(next); }
   };
   const current = open === null ? null : items[open];
+  const [link, setLink] = useState<{ top: number; right: boolean } | null>(null);
+  useLayoutEffect(() => {
+    const b = open === null ? null : refs.current[open];
+    setLink(b ? { top: b.offsetTop + b.offsetHeight - 8, right: open! % 2 === 1 } : null);
+  }, [open]);
 
   return (
     <div>
-      <div className="scroll-fade-right overflow-x-auto pr-10 pt-2 md:[mask-image:none] md:pr-0">
-        <div role="tablist" aria-label={label} className="flex min-w-max items-end">
+      <div className="relative pt-2">
+        {link && <span aria-hidden className={`absolute bottom-0 z-0 w-44 bg-paper sm:w-52 ${link.right ? "right-0" : "left-0"}`} style={{ top: link.top }} />}
+        <div role="tablist" aria-label={label} aria-orientation="vertical" className="relative flex flex-col">
           {items.map((it, i) => {
             const active = open === i;
             return (
@@ -37,8 +43,8 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
                 id={`${uid}-tab-${i}`} aria-selected={active} aria-controls={`${uid}-panel`}
                 tabIndex={i === focus ? 0 : -1}
                 onClick={() => { setOpen(i); setFocus(i); }} onKeyDown={(e) => onKey(e, i)}
-                className={`relative -mr-2 w-44 shrink-0 rounded-t-lg px-4 pb-3 pt-2.5 text-left text-paper-foreground transition-[transform,filter] duration-200 ease-out motion-reduce:transition-none sm:w-52 ${active ? `z-20 -translate-y-1.5 bg-paper motion-reduce:translate-y-0` : `${TONES[i % TONES.length]} brightness-90 hover:brightness-100`}`}
-                style={{ zIndex: active ? 20 : items.length - i }}>
+                className={`relative -mb-1 w-44 shrink-0 rounded-t-lg px-4 pb-3 pt-2.5 text-left text-paper-foreground transition-[transform,filter] duration-200 ease-out motion-reduce:transition-none sm:w-52 ${i % 2 ? "self-end" : "self-start"} ${active ? `z-20 -translate-y-1.5 bg-paper motion-reduce:translate-y-0` : `${TONES[i % TONES.length]} brightness-90 hover:brightness-100`}`}
+                style={{ zIndex: active ? 20 : items.length - i + 1 }}>
                 <span className="block text-[0.6rem] uppercase tracking-[0.25em] opacity-70">{it.index}</span>
                 <span className="block truncate font-masthead text-sm uppercase tracking-[0.12em]">{it.label}</span>
                 {active && <span aria-hidden className="absolute inset-x-0 -bottom-2 h-3 bg-paper" />}
@@ -49,7 +55,7 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
       </div>
       <div id={`${uid}-panel`} role={current ? "tabpanel" : undefined}
         aria-labelledby={current ? `${uid}-tab-${open}` : undefined}
-        className="folder-sheet relative z-10 min-h-56 rounded-b-md rounded-tr-md px-6 py-8 sm:px-10">
+        className="folder-sheet relative z-10 min-h-56 rounded-b-md px-6 py-8 sm:px-10">
         {current ? <div key={current.id} className="animate-folder">{current.content}</div>
           : <p className="flex min-h-40 items-center justify-center font-display text-lg italic text-paper-muted">{hint}</p>}
       </div>
