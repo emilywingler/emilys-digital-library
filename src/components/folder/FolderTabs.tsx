@@ -21,15 +21,15 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
 
   const move = (i: number) => { const n = (i + items.length) % items.length; setFocus(n); refs.current[n]?.focus(); };
   const onKey = (e: KeyboardEvent, i: number) => {
-    const map: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, ArrowDown: i + 1, ArrowUp: i - 1, Home: 0, End: items.length - 1 };
+    const map: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: items.length - 1 };
     const next = map[e.key]; if (next !== undefined) { e.preventDefault(); move(next); }
   };
   const current = open === null ? null : items[open];
 
   return (
     <div>
-      <div className="pt-2">
-        <div role="tablist" aria-label={label} aria-orientation="vertical" className="flex flex-col">
+      <div className="scroll-fade-right overflow-x-auto pr-10 pt-2 md:[mask-image:none] md:pr-0">
+        <div role="tablist" aria-label={label} className="flex min-w-max items-end">
           {items.map((it, i) => {
             const active = open === i;
             return (
@@ -37,7 +37,7 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
                 id={`${uid}-tab-${i}`} aria-selected={active} aria-controls={`${uid}-panel`}
                 tabIndex={i === focus ? 0 : -1}
                 onClick={() => { setOpen(i); setFocus(i); }} onKeyDown={(e) => onKey(e, i)}
-                className={`relative -mb-2 w-44 shrink-0 ${i % 2 ? "self-end" : "self-start"} rounded-t-lg px-4 pb-3 pt-2.5 text-left text-paper-foreground transition-[transform,filter] duration-200 ease-out motion-reduce:transition-none sm:w-52 ${active ? `z-20 -translate-y-1.5 bg-paper motion-reduce:translate-y-0` : `${TONES[i % TONES.length]} brightness-90 hover:brightness-100`}`}
+                className={`relative -mr-2 w-44 shrink-0 rounded-t-lg px-4 pb-3 pt-2.5 text-left text-paper-foreground transition-[transform,filter] duration-200 ease-out motion-reduce:transition-none sm:w-52 ${active ? `z-20 -translate-y-1.5 bg-paper motion-reduce:translate-y-0` : `${TONES[i % TONES.length]} brightness-90 hover:brightness-100`}`}
                 style={{ zIndex: active ? 20 : items.length - i }}>
                 <span className="block text-[0.6rem] uppercase tracking-[0.25em] opacity-70">{it.index}</span>
                 <span className="block truncate font-masthead text-sm uppercase tracking-[0.12em]">{it.label}</span>
