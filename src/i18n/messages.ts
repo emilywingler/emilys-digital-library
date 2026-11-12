@@ -9,7 +9,7 @@ const pt = {
   },
   nav: {
     label: "Navegação principal",
-    home: "Início", about: "Sobre", experience: "Experiência",
+    home: "Início", experience: "Experiência",
     skills: "Habilidades", projects: "Projetos", contact: "Contato",
     openMenu: "Abrir menu", closeMenu: "Fechar menu",
   },
@@ -25,13 +25,7 @@ const pt = {
     explore: "Explorar a biblioteca",
   },
   placeholder: { soon: "Capítulo em preparação" },
-  about: {
-    title: "Sobre", chapter: "Capítulo I",
-    pathTitle: "Trajetória", interestsTitle: "Interesses",
-    interestAreas: "Áreas de interesse", studyAreas: "Áreas de estudo",
-    languages: "Idiomas", goals: "Objetivos profissionais",
-    draft: "rascunho · para revisão",
-  },
+  experience: { title: "Experiência", kicker: "Arquivo", hint: "Selecione uma pasta", education: "Formação acadêmica", tabsLabel: "Pastas de experiência" },
 };
 
 export type Messages = typeof pt;
@@ -43,7 +37,7 @@ const en: Messages = {
   },
   nav: {
     label: "Main navigation",
-    home: "Home", about: "About", experience: "Experience",
+    home: "Home", experience: "Experience",
     skills: "Skills", projects: "Projects", contact: "Contact",
     openMenu: "Open menu", closeMenu: "Close menu",
   },
@@ -59,13 +53,7 @@ const en: Messages = {
     explore: "Explore the library",
   },
   placeholder: { soon: "Chapter in preparation" },
-  about: {
-    title: "About", chapter: "Chapter I",
-    pathTitle: "Path", interestsTitle: "Interests",
-    interestAreas: "Areas of interest", studyAreas: "Areas of study",
-    languages: "Languages", goals: "Professional goals",
-    draft: "draft · for review",
-  },
+  experience: { title: "Experience", kicker: "Archive", hint: "Select a folder", education: "Academic education", tabsLabel: "Experience folders" },
 };
 
 export const messages: Record<"pt" | "en", Messages> = { pt, en };

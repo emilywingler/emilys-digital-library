@@ -50,7 +50,7 @@ export function HomeFrontPage({ profile, links }: Props) {
 
         <Divider className="mt-8 h-4 w-full text-paper-muted" />
         <div className="mt-4 text-center">
-          <a href="#about" className="inline-flex items-center gap-2 font-display text-lg italic hover:text-olive">
+          <a href="#experience" className="inline-flex items-center gap-2 font-display text-lg italic hover:text-olive">
             {t.home.explore} <ArrowDown className="h-4 w-4" aria-hidden />
           </a>
         </div>

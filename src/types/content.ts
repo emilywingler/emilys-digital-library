@@ -25,33 +25,14 @@ export interface ContactLink {
   href: string;
 }
 
-/** Handwritten-style note in a page margin. `placeholder` marks text awaiting Emily's wording. */
-export interface MarginNoteData {
-  text: LocalizedText;
-  placeholder?: boolean;
-}
 
-/** One stop on the About timeline (only facts from the CV). */
-export interface TimelineEntry {
+/** One file in the Experience folder. Bullets are copied from the CV verbatim (pt) and translated (en). */
+export interface ExperienceEntry {
   id: string;
+  tab: LocalizedText;
+  kind: "work" | "education";
   period: LocalizedText;
   role: LocalizedText;
-  place: string;
-  summary: LocalizedText;
-  note?: MarginNoteData;
-}
-
-/** A labelled block of text on the About right page. */
-export interface AboutBlock {
-  items: LocalizedText[];
-  placeholder?: boolean;
-  note?: MarginNoteData;
-}
-
-export interface AboutContent {
-  timeline: TimelineEntry[];
-  interestAreas: AboutBlock;
-  studyAreas: AboutBlock;
-  languages: AboutBlock;
-  goals: AboutBlock;
+  organization: string;
+  bullets: LocalizedText[];
 }
