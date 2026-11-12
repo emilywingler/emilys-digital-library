@@ -28,11 +28,8 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
 
   return (
     <div>
-      <div className="pt-2">
-        <div role="tablist" aria-label={label} aria-orientation="vertical" className="relative grid grid-cols-1 items-end">
-          {open !== null && (
-            <span aria-hidden className={`pointer-events-none absolute -bottom-2 w-44 bg-paper sm:w-52 ${open % 2 === 0 ? "left-0" : "right-0"} ${["h-[calc(75%+0.5rem)]", "h-[calc(50%+0.5rem)]", "h-[calc(25%+0.5rem)]", "h-2"][open]}`} />
-          )}
+      <div className="scroll-fade-right overflow-x-auto pr-10 pt-2 md:[mask-image:none] md:pr-0">
+        <div role="tablist" aria-label={label} className="flex min-w-max items-end">
           {items.map((it, i) => {
             const active = open === i;
             return (
@@ -40,7 +37,7 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
                 id={`${uid}-tab-${i}`} aria-selected={active} aria-controls={`${uid}-panel`}
                 tabIndex={i === focus ? 0 : -1}
                 onClick={() => { setOpen(i); setFocus(i); }} onKeyDown={(e) => onKey(e, i)}
-                className={`relative w-44 max-w-full shrink-0 rounded-t-lg px-4 pb-3 pt-2.5 text-left text-paper-foreground transition-[transform,filter] duration-200 ease-out motion-reduce:transition-none sm:w-52 ${i % 2 === 0 ? "justify-self-start" : "justify-self-end"} ${active ? `z-20 -translate-y-1.5 bg-paper motion-reduce:translate-y-0` : `${TONES[i % TONES.length]} brightness-90 hover:brightness-100`}`}
+                className={`relative -mr-2 w-44 shrink-0 rounded-t-lg px-4 pb-3 pt-2.5 text-left text-paper-foreground transition-[transform,filter] duration-200 ease-out motion-reduce:transition-none sm:w-52 ${active ? `z-20 -translate-y-1.5 bg-paper motion-reduce:translate-y-0` : `${TONES[i % TONES.length]} brightness-90 hover:brightness-100`}`}
                 style={{ zIndex: active ? 20 : items.length - i }}>
                 <span className="block text-[0.6rem] uppercase tracking-[0.25em] opacity-70">{it.index}</span>
                 <span className="block truncate font-masthead text-sm uppercase tracking-[0.12em]">{it.label}</span>
