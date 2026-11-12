@@ -22,7 +22,7 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
   const move = (i: number) => { const n = (i + items.length) % items.length; setFocus(n); refs.current[n]?.focus(); };
   const onKey = (e: KeyboardEvent, i: number) => {
     const map: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: items.length - 1 };
-    if (e.key in map) { e.preventDefault(); move(map[e.key]); }
+    const next = map[e.key]; if (next !== undefined) { e.preventDefault(); move(next); }
   };
   const current = open === null ? null : items[open];
 
