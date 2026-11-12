@@ -27,3 +27,11 @@ npm run dev
 - TypeScript
 - React
 - Tailwind CSS
+
+## Emily Wingler — Portfolio
+Dark Academia bilingual portfolio. See `docs/ARCHITECTURE.md` for structure and data flow.
+- Edit personal text: `src/content/profile.ts`
+- Edit links: `src/content/links.ts`
+- Edit interface text: `src/i18n/messages.ts`
+- Edit colors/fonts: `src/styles.css`
+- Run: `bun install && bun run dev`; tests: `bunx vitest run`

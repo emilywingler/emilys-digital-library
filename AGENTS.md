@@ -28,3 +28,9 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Locale lives in the URL (`/` pt default, `/en` en); read it with `useLocale()`, never store it in state — keeps links shareable and SSR consistent.
+- Visitor-facing content lives in `src/content/` as `{ pt, en }` typed data passed via props — allows swapping to a database later without touching components.
+- All design tokens live in `src/styles.css`; components use semantic classes only — single place to retheme.
+- Decorative SVGs go in `src/components/decor/`, aria-hidden, using currentColor — keeps decoration separate from content.
