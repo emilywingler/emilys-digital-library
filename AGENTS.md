@@ -34,3 +34,4 @@ use the editor.
 - Visitor-facing content lives in `src/content/` as `{ pt, en }` typed data passed via props — allows swapping to a database later without touching components.
 - All design tokens live in `src/styles.css`; components use semantic classes only — single place to retheme.
 - Decorative SVGs go in `src/components/decor/`, aria-hidden, using currentColor — keeps decoration separate from content.
+- Book-style sections reuse `src/components/about/BookPage.tsx`; unconfirmed text is flagged `placeholder: true` in content data so the UI shows a draft tag — keeps invented facts out.

@@ -17,7 +17,7 @@ const pt = {
   home: {
     gazette: "Arquivo Pessoal",
     edition: "Edição Nº 1",
-    est: "Fundado em 2022 · UFES",
+    est: "UFES · São Mateus, Espírito Santo",
     lead: "Notas de uma engenheira em formação",
     profileHeading: "Perfil",
     linksHeading: "Classificados",
@@ -25,6 +25,13 @@ const pt = {
     explore: "Explorar a biblioteca",
   },
   placeholder: { soon: "Capítulo em preparação" },
+  about: {
+    title: "Sobre", chapter: "Capítulo I",
+    pathTitle: "Trajetória", interestsTitle: "Interesses",
+    interestAreas: "Áreas de interesse", studyAreas: "Áreas de estudo",
+    languages: "Idiomas", goals: "Objetivos profissionais",
+    draft: "rascunho · para revisão",
+  },
 };
 
 export type Messages = typeof pt;
@@ -44,7 +51,7 @@ const en: Messages = {
   home: {
     gazette: "Personal Archive",
     edition: "Edition No. 1",
-    est: "Established 2022 · UFES",
+    est: "UFES · São Mateus, Espírito Santo",
     lead: "Notes from an engineer in the making",
     profileHeading: "Profile",
     linksHeading: "Classifieds",
@@ -52,6 +59,13 @@ const en: Messages = {
     explore: "Explore the library",
   },
   placeholder: { soon: "Chapter in preparation" },
+  about: {
+    title: "About", chapter: "Chapter I",
+    pathTitle: "Path", interestsTitle: "Interests",
+    interestAreas: "Areas of interest", studyAreas: "Areas of study",
+    languages: "Languages", goals: "Professional goals",
+    draft: "draft · for review",
+  },
 };
 
 export const messages: Record<"pt" | "en", Messages> = { pt, en };

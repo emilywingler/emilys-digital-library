@@ -1,6 +1,8 @@
 import { HomeFrontPage } from "@/components/home/HomeFrontPage";
 import { contactLinks } from "@/content/links";
 import { profile } from "@/content/profile";
+import { about } from "@/content/about";
+import { AboutBook } from "@/components/about/AboutBook";
 import { SiteHeader } from "./SiteHeader";
 import { SectionPlaceholder } from "./SectionPlaceholder";
 
@@ -18,7 +20,7 @@ export function PortfolioPage() {
       <SiteHeader />
       <main id="main">
         <HomeFrontPage profile={profile} links={contactLinks} />
-        <SectionPlaceholder id="about" />
+        <AboutBook content={about} />
         <SectionPlaceholder id="experience" />
         <SectionPlaceholder id="skills" />
         <SectionPlaceholder id="projects" />

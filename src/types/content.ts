@@ -24,3 +24,34 @@ export interface ContactLink {
   display: string;
   href: string;
 }
+
+/** Handwritten-style note in a page margin. `placeholder` marks text awaiting Emily's wording. */
+export interface MarginNoteData {
+  text: LocalizedText;
+  placeholder?: boolean;
+}
+
+/** One stop on the About timeline (only facts from the CV). */
+export interface TimelineEntry {
+  id: string;
+  period: LocalizedText;
+  role: LocalizedText;
+  place: string;
+  summary: LocalizedText;
+  note?: MarginNoteData;
+}
+
+/** A labelled block of text on the About right page. */
+export interface AboutBlock {
+  items: LocalizedText[];
+  placeholder?: boolean;
+  note?: MarginNoteData;
+}
+
+export interface AboutContent {
+  timeline: TimelineEntry[];
+  interestAreas: AboutBlock;
+  studyAreas: AboutBlock;
+  languages: AboutBlock;
+  goals: AboutBlock;
+}
