@@ -3,6 +3,7 @@
 The first build step adds these tasks to `roadmap.md`.
 
 ## 1. Custom arrow (used everywhere an arrow appears)
+
 - Source checked:
   - The SVG you uploaded is the true vector version of `Seta.png`: same 340x1163 artwork, a single solid fill, pointing up.
   - The PNG is also a clean single-colour silhouette on transparency.
@@ -19,6 +20,7 @@ The first build step adds these tasks to `roadmap.md`.
 - Not changed: X, menu, contact icons, and unused UI-kit files that never appear on the site.
 
 ## 2. Journal carousel
+
 - Data: `JournalEntry` becomes `{ kind: "article", ...JournalArticle } | { kind: "upcoming", id }`. The upcoming entry has no title, excerpt, date, reading time, URL or status fields at all. SheBuilds stays first and unchanged.
 - Rendering by type:
   - Article: the existing `JournalEntry` view, unchanged, with the disabled Medium button.
@@ -34,7 +36,9 @@ The first build step adds these tasks to `roadmap.md`.
 - No autoplay, no new dependencies. To replace the placeholder later, swap the data entry.
 
 ## 3. Physical book closing
+
 Phases become `cover | opening | open | folding | returning`.
+
 - Close request by phase:
   - `cover` or `opening`: cancel the opening timers and go straight to `returning`.
   - `open`: `folding` (the cover swings shut, reverse hinge, about 520ms), then `returning` (about 420ms).
@@ -53,6 +57,7 @@ Phases become `cover | opening | open | folding | returning`.
 - The opening animation, covers, spines and content are unchanged.
 
 ## Technical details
+
 - `OpenBook` exports `FOLD_MS` and `RETURN_MS` (replacing `CLOSE_MS`) and gets a new prop `getOrigin: () => DOMRect | undefined`. The cover `<img>` renders in every phase except `open`. CSS: `cover-fold` keyframes and the `returning` transform vars.
 - `ProjectLibrary` passes `getOrigin` from `spineRefs`.
 - Tests: `project-library.test.tsx` is updated, plus new journal tests:
@@ -62,4 +67,28 @@ Phases become `cover | opening | open | folding | returning`.
   - No horizontal overflow; arrows checked on parchment and dark backgrounds; carousel steady between slides.
   - Close animation frames confirm the cover ends on the spine; repeated open/close cycles.
   - The report keeps automated tests and browser checks separate.
-- Docs: `AGENTS.md` (arrow rule, journal entry union, close phases) and `docs/ARCHITECTURE.md`, written to match what was actually built.
+- Docs: `AGENTS.md` (arrow rule, journal entry union, close phases) and `docs/ARCHITECTURE.md`, written to match what was actually built.  
+  
+Additional implementation safeguards
+  ### 1. Journal carousel — stable layout
+  - Ensure inactive slides remain part of the carousel's layout measurement so the container preserves the height of the tallest slide.
+  - Do not use the `hidden` attribute if it applies `display: none` and removes the inactive slide from grid sizing.
+  - Keep inactive slides visually hidden, non-interactive, and inaccessible to screen readers using an appropriate combination of visibility, opacity, pointer events, and `inert` or equivalent accessibility handling.
+  - Only the active slide may be exposed to assistive technology or receive keyboard focus.
+  - Verify that switching between SheBuilds and the upcoming placeholder does not cause the Journal section or surrounding content to jump vertically.
+  ### 2. Book closing — coordinate and geometry accuracy
+  - Ensure the return translation is converted into the cover element's local coordinate system, accounting for its containing block, positioning context, and existing transforms.
+  - Verify both horizontal and vertical alignment at the final animation frame. Do not assume matching heights guarantee matching widths.
+  - If the cover and spine aspect ratios differ, prioritize correct alignment and use a visually appropriate scale without distorting the cover artwork.
+  - Test the final resting position at desktop, tablet, and mobile sizes, including the spread and single-leaf layouts.
+  - Confirm that the cover does not briefly jump between its folding and returning phases.
+  ### 3. Custom arrow — asset reliability
+  - Use the supplied SVG as an external mask asset, preserving the original file unchanged.
+  - Verify that the mask renders correctly in supported browsers and that its color updates through `currentColor` when the surrounding button or text color changes.
+  - Provide a graceful fallback if the SVG mask fails to load.
+  - Confirm that the arrow retains its original proportions and remains visually legible at all intended button sizes.
+  ### 4. Final regression checks
+  - Verify that the new Journal carousel does not change the existing section's typography, spacing, or visual hierarchy.
+  - Verify that all existing project-book opening and closing behavior remains intact.
+  - Check that the SVG arrow replacement does not alter button dimensions, alignment, or interaction areas.
+  - Report any browser-specific limitations or tests that could not be executed.

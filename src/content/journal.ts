@@ -1,4 +1,4 @@
-import type { JournalArticle } from "@/types/content";
+import type { JournalArticle, JournalSlot } from "@/types/content";
 import shebuildsCover from "@/assets/journal/shebuilds/cover.png.asset.json";
 
 /** Journal entries, newest first. Text is final copy supplied by Emily. */
@@ -12,4 +12,10 @@ export const journalArticles: JournalArticle[] = [
     cover: { src: shebuildsCover.url, alt: "Banner do SheBuilds com a pergunta “Como foi participar?”", width: 1400, height: 788 },
     status: "in-progress",
   },
+];
+
+/** Carousel order: real articles first, then the temporary "forthcoming" plate. */
+export const journalSlots: JournalSlot[] = [
+  ...journalArticles.map((a) => ({ kind: "article" as const, ...a })),
+  { kind: "upcoming", id: "upcoming" },
 ];

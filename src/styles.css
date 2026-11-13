@@ -344,7 +344,7 @@
 }
 
 .book-overlay { background: var(--book-overlay); backdrop-filter: blur(2px); animation: lib-fade-in 0.25s ease-out both; }
-.book-overlay[data-phase="closing"] { animation: lib-fade-out 0.22s ease-in both; }
+.book-overlay[data-phase="returning"] { animation: lib-fade-out 0.42s ease-in both; }
 @keyframes lib-fade-in { from { opacity: 0; } }
 @keyframes lib-fade-out { to { opacity: 0; } }
 
@@ -372,7 +372,20 @@
 .open-book[data-phase="opening"] .book-spread { opacity: 1; transition: opacity 0.2s; }
 .open-book:not([data-phase="open"]) .book-page-content { visibility: hidden; opacity: 0; }
 .open-book[data-phase="open"] .book-page-content { animation: lib-fade-in 0.28s ease-out both; }
-.open-book[data-phase="closing"] .book-spread { animation: book-out 0.22s ease-in both; }
+.open-book[data-phase="folding"] .book-cover { animation: cover-fold 0.52s cubic-bezier(.45,.05,.3,1) both; }
+.open-book[data-phase="returning"] .book-spread { animation: book-out 0.2s ease-in both; }
+.open-book[data-phase="returning"] .book-cover { transform-origin: center; animation: book-return 0.42s cubic-bezier(.4,0,.2,1) both; }
+@keyframes cover-fold {
+  from { transform: perspective(2200px) rotateY(-170deg); opacity: 0; }
+  15% { opacity: 1; }
+  to { transform: perspective(2200px) rotateY(0); opacity: 1; }
+}
+/* --ret-* are measured in OpenBook; defaults are the shrink-in-place fallback. */
+@keyframes book-return {
+  from { transform: none; opacity: 1; }
+  80% { opacity: 1; }
+  to { transform: translate(var(--ret-x, 0px), var(--ret-y, 0px)) scale(var(--ret-s, 0.85)); opacity: 0; }
+}
 @keyframes cover-rise { from { opacity: 0; transform: translateY(30px) scale(0.85); } }
 @keyframes cover-hinge {
   from { transform: perspective(2200px) rotateY(0); }
@@ -478,3 +491,29 @@ a.journal-cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 3p
   .journal-plate, .journal-cta { transition: none; }
   .journal-entry:hover .journal-plate { transform: none; }
 }
+
+/* Ornate arrow: supplied SVG as a mask, coloured by currentColor. */
+.ornate-arrow { position: relative; display: inline-block; flex: none; vertical-align: middle; }
+.ornate-arrow-glyph { position: absolute; left: 50%; top: 50%; background-color: currentColor;
+  -webkit-mask: var(--arrow-src) center / contain no-repeat; mask: var(--arrow-src) center / contain no-repeat; }
+/* Fallback when masks are unsupported: a plain thin stroke keeps the direction legible. */
+@supports not ((mask-image: url("")) or (-webkit-mask-image: url(""))) {
+  .ornate-arrow-glyph { background: none; border-left: 2px solid currentColor; width: 0 !important; }
+}
+
+/* Journal carousel: slides share one grid cell so height = tallest slide. */
+.journal-track { display: grid; }
+.journal-slide { grid-area: 1 / 1; min-width: 0; }
+.journal-slide[data-active="false"] { visibility: hidden; opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .journal-slide[data-active="true"] { animation: lib-fade-in 0.35s ease-out both; }
+}
+.journal-nav { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 2rem; }
+.journal-nav-btn { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; cursor: pointer;
+  color: var(--paper-foreground); border: 1px solid oklch(0.3 0.03 50 / 30%); background: transparent; }
+.journal-nav-btn:hover { background: oklch(0.3 0.03 50 / 8%); }
+.journal-nav-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.journal-nav-pos { min-width: 4.5rem; text-align: center; font-family: var(--font-masthead); font-size: 0.8rem; letter-spacing: 0.25em; color: var(--paper-muted); }
+.journal-upcoming-plate { display: grid; place-items: center; gap: 0.75rem; aspect-ratio: 16 / 9; padding: 1.5rem; text-align: center;
+  background: var(--paper); color: var(--paper-muted); outline: 1px solid var(--gold); outline-offset: -0.6rem;
+  border: 3px double var(--gold); }

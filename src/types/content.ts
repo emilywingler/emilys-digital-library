@@ -157,3 +157,11 @@ export interface JournalArticle {
   /** Only honoured when `status === "published"` and it is an https URL. */
   url?: string | undefined;
 }
+
+/**
+ * A slot in the Journal carousel. `upcoming` is a visual "more to come" plate
+ * with no article fields at all; replace it with an `article` slot later.
+ */
+export type JournalSlot =
+  | ({ kind: "article" } & JournalArticle)
+  | { kind: "upcoming"; id: string };

@@ -53,6 +53,7 @@ export function ProjectLibrary({ projects, decor }: { projects: Project[]; decor
             setTimeout(() => spineRefs.current.get(id)?.focus(), 0);
           }}
           returnFocus={() => spineRefs.current.get(active.id)?.focus()}
+          getOrigin={() => spineRefs.current.get(active.id)?.getBoundingClientRect()}
         />
       )}
     </section>

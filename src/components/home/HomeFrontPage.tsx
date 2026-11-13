@@ -1,4 +1,4 @@
-import { ArrowDown } from "lucide-react";
+import { OrnateArrow } from "@/components/decor/OrnateArrow";
 import { Divider, Flourish } from "@/components/decor/Ornaments";
 import { useLocale } from "@/i18n/locale";
 import type { Profile } from "@/types/content";
@@ -50,7 +50,7 @@ export function HomeFrontPage({ profile }: Props) {
         <Divider className="mt-8 h-4 w-full text-paper-muted" />
         <div className="mt-4 text-center">
           <a href="#experience" className="inline-flex items-center gap-2 font-display text-lg italic hover:text-olive">
-            {t.home.explore} <ArrowDown className="h-4 w-4" aria-hidden />
+            {t.home.explore} <OrnateArrow direction="down" length="1.6rem" />
           </a>
         </div>
       </article>

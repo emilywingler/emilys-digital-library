@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as D from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import type { Locale, Project } from "@/types/content";
@@ -9,9 +9,11 @@ import { BookPageMedia } from "./BookPageMedia";
 /** Phase timings (ms). CSS keyframes in styles.css use the same durations. */
 export const COVER_MS = 380;
 export const HINGE_MS = 620;
-export const CLOSE_MS = 220;
+/** Closing: cover swings shut over the pages, then flies back to its spine. */
+export const FOLD_MS = 520;
+export const RETURN_MS = 420;
 
-export type BookPhase = "cover" | "opening" | "open" | "closing";
+export type BookPhase = "cover" | "opening" | "open" | "folding" | "returning";
 
 interface Props {
   project: Project;
@@ -21,33 +23,59 @@ interface Props {
   onClosed: () => void;
   /** Element to refocus after closing (the spine that opened the book). */
   returnFocus: () => void;
+  /** Current on-screen rect of the spine this book came from (measured when the return starts). */
+  getOrigin?: () => DOMRect | undefined;
 }
 
 /**
  * Floating open book. Radix Dialog supplies focus trap, Escape, outside-click,
  * scroll lock and labelling; this component only adds the phase sequence:
- * cover shown → cover swings open on its left edge → pages fade in → (closing).
+ * cover shown → cover swings open on its left edge → pages fade in. Closing
+ * reverses it: (open → folding) → returning, where the closed cover moves and
+ * scales onto the spine's measured position, then unmounts.
  * One shared scroll surface contains both pages; CSS switches to a bound
  * vertical leaf when two readable pages cannot fit. Page content stays hidden until the hinge finishes. Reduced motion jumps
  * straight to "open" and closes instantly.
  */
-export function OpenBook({ project, locale, t, reduceMotion, onClosed, returnFocus }: Props) {
+export function OpenBook({ project, locale, t, reduceMotion, onClosed, returnFocus, getOrigin }: Props) {
   const [phase, setPhase] = useState<BookPhase>(reduceMotion ? "open" : "cover");
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const coverRef = useRef<HTMLImageElement>(null);
+  const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
+  const later = (fn: () => void, ms: number) => { timers.current.push(setTimeout(fn, ms)); };
 
   useEffect(() => {
-    if (reduceMotion) return;
-    timers.current.push(setTimeout(() => setPhase("opening"), COVER_MS));
-    timers.current.push(setTimeout(() => setPhase("open"), COVER_MS + HINGE_MS));
-    return () => timers.current.forEach(clearTimeout);
+    if (!reduceMotion) {
+      later(() => setPhase("opening"), COVER_MS);
+      later(() => setPhase("open"), COVER_MS + HINGE_MS);
+    }
+    return clearTimers; // also drops any pending close callbacks on unmount
   }, [reduceMotion]);
 
+  // Measure once when the return starts: spine centre minus cover centre, in
+  // viewport px. Ancestors only translate (never scale), so that delta is also
+  // the cover's local translate. Invalid origin → CSS defaults shrink in place.
+  useLayoutEffect(() => {
+    if (phase !== "returning") return;
+    const cover = coverRef.current;
+    if (!cover) return;
+    const from = cover.getBoundingClientRect();
+    const to = getOrigin?.();
+    if (to && to.width > 0 && to.height > 0 && from.height > 0) {
+      cover.style.setProperty("--ret-x", `${to.left + to.width / 2 - (from.left + from.width / 2)}px`);
+      cover.style.setProperty("--ret-y", `${to.top + to.height / 2 - (from.top + from.height / 2)}px`);
+      cover.style.setProperty("--ret-s", String(to.height / from.height));
+      cover.setAttribute("data-return", "spine");
+    } else cover.setAttribute("data-return", "fallback");
+  }, [phase, getOrigin]);
+
   const requestClose = () => {
-    if (phase === "closing") return;
-    timers.current.forEach(clearTimeout);
+    if (phase === "folding" || phase === "returning") return;
+    clearTimers();
     if (reduceMotion) return onClosed();
-    setPhase("closing");
-    timers.current.push(setTimeout(onClosed, CLOSE_MS));
+    const toReturn = () => { setPhase("returning"); later(onClosed, RETURN_MS); };
+    if (phase === "open") { setPhase("folding"); later(toReturn, FOLD_MS); }
+    else toReturn(); // cover / opening: the cover is already closed-ish, skip the fold
   };
 
   return (
@@ -68,8 +96,8 @@ export function OpenBook({ project, locale, t, reduceMotion, onClosed, returnFoc
                  <section className="book-page book-page-right" data-media-state={project.media.length ? "available" : "empty"} aria-label={t.plateLabel}><div className="book-page-content h-full"><BookPageMedia project={project} locale={locale} t={t} /></div></section>
               </div>
             </div>
-            {phase !== "open" && phase !== "closing" && (
-              <img src={project.cover[locale]} alt="" aria-hidden="true" className="book-cover" draggable={false} />
+            {phase !== "open" && (
+              <img ref={coverRef} src={project.cover[locale]} alt="" aria-hidden="true" className="book-cover" draggable={false} />
             )}
             <D.Close aria-label={t.close} className="book-close">
               <X className="h-5 w-5" aria-hidden="true" />

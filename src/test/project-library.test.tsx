@@ -4,7 +4,7 @@ import { createMemoryHistory, createRootRoute, createRouter, RouterProvider } fr
 import { ProjectLibrary, LIFT_MS } from "@/components/library/ProjectLibrary";
 import { BookPageMedia, videoEmbedUrl } from "@/components/library/BookPageMedia";
 import { messages } from "@/i18n/messages";
-import { COVER_MS, HINGE_MS, CLOSE_MS } from "@/components/library/OpenBook";
+import { COVER_MS, HINGE_MS, FOLD_MS, RETURN_MS } from "@/components/library/OpenBook";
 import { projects, shelfDecor } from "@/content/projects";
 
 /** Renders the section inside a router so `useLocale()` reads the URL. */
@@ -26,6 +26,8 @@ async function openFirst(name = /Olist/) {
   await act(async () => { await vi.advanceTimersByTimeAsync(LIFT_MS + 1000); });
   await act(async () => { await vi.advanceTimersByTimeAsync(COVER_MS + HINGE_MS + 10); });
 }
+
+const CLOSE_MS = FOLD_MS + RETURN_MS;
 
 beforeEach(() => { vi.useFakeTimers({ shouldAdvanceTime: true }); setReducedMotion(false); });
 afterEach(() => { vi.useRealTimers(); });
@@ -133,6 +135,52 @@ describe("ProjectLibrary", () => {
     fireEvent.click(screen.getByRole("button", { name: "Fechar livro" }));
     await act(async () => { await vi.advanceTimersByTimeAsync(0); });
     expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("closing folds, then returns, keeping the spine lifted until unmount", async () => {
+    await setup();
+    const spine = screen.getByRole("button", { name: /Olist/ });
+    await openFirst();
+    fireEvent.click(screen.getByRole("button", { name: "Fechar livro" }));
+    const book = screen.getByTestId("open-book");
+    expect(book).toHaveAttribute("data-phase", "folding");
+    expect(book.querySelector(".book-cover")).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Fechar livro" })); // ignored
+    fireEvent.keyDown(document.activeElement!, { key: "Escape" }); // ignored
+    await act(async () => { await vi.advanceTimersByTimeAsync(FOLD_MS + 5); });
+    expect(book).toHaveAttribute("data-phase", "returning");
+    expect(spine).toHaveAttribute("data-lifted");
+    await act(async () => { await vi.advanceTimersByTimeAsync(RETURN_MS + 5); });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    await act(async () => { await vi.advanceTimersByTimeAsync(10); });
+    expect(spine).not.toHaveAttribute("data-lifted");
+    expect(document.activeElement).toBe(spine);
+  });
+
+  it("closing during the opening hinge skips the fold", async () => {
+    await setup();
+    fireEvent.click(screen.getByRole("button", { name: /Olist/ }));
+    await act(async () => { await vi.advanceTimersByTimeAsync(LIFT_MS + 1000); });
+    await act(async () => { await vi.advanceTimersByTimeAsync(COVER_MS + 10); });
+    const book = screen.getByTestId("open-book");
+    expect(book).toHaveAttribute("data-phase", "opening");
+    fireEvent.click(screen.getByRole("button", { name: "Fechar livro" }));
+    expect(book).toHaveAttribute("data-phase", "returning");
+    await act(async () => { await vi.advanceTimersByTimeAsync(RETURN_MS + 5); });
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("aims the return at the spine and survives repeated open/close cycles", async () => {
+    await setup();
+    for (let i = 0; i < 3; i++) {
+      await openFirst();
+      fireEvent.click(screen.getByRole("button", { name: "Fechar livro" }));
+      await act(async () => { await vi.advanceTimersByTimeAsync(FOLD_MS + 5); });
+      expect(document.querySelector(".book-cover")!.getAttribute("data-return")).toMatch(/spine|fallback/);
+      await act(async () => { await vi.advanceTimersByTimeAsync(RETURN_MS + 20); });
+      expect(screen.queryByRole("dialog")).toBeNull();
+      expect(document.querySelectorAll("[data-lifted]")).toHaveLength(0);
+    }
   });
 
   it("shows the review placeholder for unconfirmed contributions", async () => {

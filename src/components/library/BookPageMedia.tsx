@@ -1,6 +1,7 @@
 import { useState, type KeyboardEvent } from "react";
 import * as D from "@radix-ui/react-dialog";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { X } from "lucide-react";
+import { OrnateArrow } from "@/components/decor/OrnateArrow";
 import type { ImageMedia, Locale, Project, ProjectMedia, VideoMedia } from "@/types/content";
 import type { Messages } from "@/i18n/messages";
 
@@ -99,11 +100,11 @@ export function BookPageMedia({ project, locale, t }: { project: Project; locale
       <Plate key={index} item={current} locale={locale} t={t} />
       {total > 1 && (
         <div className="plate-nav" role="group" aria-label={t.plateLabel} onKeyDown={onKey}>
-          <button type="button" className="plate-nav-btn" aria-label={t.prev} onClick={() => go(-1)}><ChevronLeft className="h-4 w-4" aria-hidden="true" /></button>
+          <button type="button" className="plate-nav-btn" aria-label={t.prev} onClick={() => go(-1)}><OrnateArrow direction="left" length="2.25rem" /></button>
           <span className="plate-nav-pos" aria-live="polite" aria-atomic="true">
             {t.position.replace("{n}", String(index + 1)).replace("{total}", String(total))}
           </span>
-          <button type="button" className="plate-nav-btn" aria-label={t.next} onClick={() => go(1)}><ChevronRight className="h-4 w-4" aria-hidden="true" /></button>
+          <button type="button" className="plate-nav-btn" aria-label={t.next} onClick={() => go(1)}><OrnateArrow direction="right" length="2.25rem" /></button>
         </div>
       )}
     </div>

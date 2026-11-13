@@ -46,3 +46,8 @@ Replace imports from `src/content` in `PortfolioPage` with a loader/query that r
 - Components (`src/components/journal/`): `WinglerJournal` → `JournalEntry` → `JournalCta`.
 - CTA rule: `in-progress` → native disabled button (any URL ignored); `published` + https URL → new-tab link with `rel="noopener noreferrer"`; `published` without valid URL → no action.
 - Future DB: one `journal_articles` row per entry with the same flat fields.
+
+## Refinements (Nov 2026)
+- **OrnateArrow**: the uploaded SVG (unchanged, CDN pointer) is a CSS mask filled with `currentColor`; `length` sets the pointing axis and the other axis follows the native 340:1163 ratio. Used for Home "explore" (down), book plate prev/next and Journal prev/next. Without mask support a thin stroke shows instead.
+- **Journal carousel**: `src/content/journal.ts` exports `journalSlots`. `WinglerJournal` shows one slot; inactive slides stay in layout (visibility hidden, `inert`, `aria-hidden`), so height = tallest slide. Counter `01 / 02` is a polite live region; Left/Right work inside the carousel and wrap. `upcoming` renders `UpcomingEntry` (no metadata, stamp or CTA). Replace it by adding an `article` slot.
+- **Book closing**: `FOLD_MS`/`RETURN_MS` in `OpenBook`. From `open`, the cover folds shut, then (`returning`) translates/scales so its centre and height match the spine rect from `getOrigin()`; missing rect → shrink-and-fade in place. Close requests during folding/returning are ignored; the spine stays lifted and other books are blocked until unmount, then focus returns to the spine. Reduced motion closes immediately.

@@ -41,3 +41,6 @@ use the editor.
 - Project-bearing shelves suppress decorative objects, then filler books with cabinet container queries — project books stay together while roomy and decor-only shelves preserve their composition.
 - Contact lives only in `src/components/contact/ContactBookmark.tsx` (also the page footer), reading `src/content/links.ts`; the Home shows the portrait from `profile.portrait` — keeps contact data in one place.
 - Journal CTA state is derived only from `status` + `isSafeExternalUrl` in `src/components/journal/JournalCta.tsx` — prevents broken or premature Medium links.
+- Every visible arrow is `src/components/decor/OrnateArrow.tsx` (the supplied SVG pointer used as a `currentColor` mask, rotated only, aspect locked) — one faithful artwork, recolourable everywhere.
+- The Journal renders `journalSlots` (`JournalSlot` union: `article` | `upcoming`) in a one-at-a-time carousel whose slides share a grid cell, with inactive slides `inert` — stable height, swap placeholder by data only.
+- OpenBook closes `open → folding → returning` (cover/opening skip to returning); the return transform is measured from the spine rect at return start — keeps the physical-book metaphor without new deps.

@@ -16,3 +16,9 @@
 # Comment: responsive shelf decoration
 
 - [x] Suppress decorations progressively when they compete with project books; verify narrow and wide shelves in both languages.
+
+# Targeted refinements
+
+- [x] Ornate arrow everywhere an arrow appears (Home, plates, Journal).
+- [x] Journal carousel with SheBuilds + upcoming placeholder.
+- [x] Physical book closing (fold, return to spine).
