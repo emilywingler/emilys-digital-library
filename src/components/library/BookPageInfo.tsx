@@ -7,10 +7,10 @@ import type { Messages } from "@/i18n/messages";
 export function BookPageInfo({ project, locale, t }: { project: Project; locale: Locale; t: Messages["projects"] }) {
   const tech = project.technologies.map((x) => (typeof x === "string" ? x : x[locale]));
   return (
-    <div className="flex h-full flex-col px-6 py-7 sm:px-8">
-      <div className="flex items-baseline justify-between pr-12 font-masthead md:pr-0 text-[0.7rem] uppercase tracking-[0.25em] text-paper-muted">
-        <span>{t.title}</span>
-        <span>{project.catalogNo}</span>
+    <div className="book-info flex h-full min-w-0 flex-col px-6 py-7 sm:px-8">
+      <div className="book-running-head grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 font-masthead text-[0.7rem] uppercase tracking-[0.25em] text-paper-muted">
+        <span className="min-w-0">{t.title}</span>
+        <span className="shrink-0">{project.catalogNo}</span>
       </div>
       <D.Title className="mt-5 font-display text-3xl leading-tight text-paper-foreground">{project.title[locale]}</D.Title>
       <D.Description className="mt-2 font-display text-lg italic text-paper-muted">{project.intro[locale]}</D.Description>
@@ -23,10 +23,12 @@ export function BookPageInfo({ project, locale, t }: { project: Project; locale:
         {tech.map((n) => <li key={n} className="border border-paper-foreground/25 px-2 py-0.5 text-xs">{n}</li>)}
       </ul>
 
+      <div className="book-contribution" data-unconfirmed={!project.contribution || undefined}>
       <h3 className="mt-5 font-masthead text-xs uppercase tracking-[0.2em] text-paper-muted">{t.role}</h3>
       {project.contribution
         ? <p className="mt-1 text-sm">{project.contribution[locale]}</p>
         : <p data-placeholder className="mt-1 text-sm italic text-paper-muted">[{t.rolePending}]</p>}
+      </div>
 
       <div className="mt-6 flex flex-wrap md:mt-auto gap-x-5 gap-y-2 border-t border-paper-foreground/20 pt-4 text-sm">
         <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className="font-semibold underline decoration-gold decoration-2 underline-offset-4 hover:text-paper-muted">

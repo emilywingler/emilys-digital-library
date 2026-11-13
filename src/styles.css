@@ -269,6 +269,10 @@
   --decor-book-3: oklch(0.3 0.04 250);
   --decor-book-4: oklch(0.5 0.05 70);
   --book-overlay: oklch(0.15 0.01 60 / 72%);
+  --book-plate: oklch(0.83 0.03 78);
+  --book-binding: linear-gradient(90deg, oklch(0.6 0.03 70), oklch(0.42 0.03 60) 50%, oklch(0.6 0.03 70));
+  --shadow-book: 0 40px 70px -30px oklch(0.05 0.01 50 / 90%);
+  --shadow-cover: 0 30px 50px -20px oklch(0.05 0.01 50 / 90%);
   --spine-scale: 0.74;
 }
 @media (min-width: 640px) { :root { --spine-scale: 1; } }
@@ -312,20 +316,24 @@
 @keyframes lib-fade-in { from { opacity: 0; } }
 @keyframes lib-fade-out { to { opacity: 0; } }
 
-/* Page size: fits both height and width; ratio matches the 595:842 covers. */
+/* Two readable leaves need 2 × 434px + 12px binding + 80px clearance.
+   Width sets typography space; height never compresses the pages. */
 .open-book {
-  --page-h: min(86vh, 700px, calc((100vw - 5rem) * 0.7076));
-  --page-w: calc(var(--page-h) * 0.7067);
+  --page-w: min(495px, calc((100vw - 5rem - 0.75rem) / 2));
+  --page-h: calc(var(--page-w) * 842 / 595);
+  width: calc(var(--page-w) * 2 + 0.75rem);
   color: var(--paper-foreground);
 }
-.book-spread { display: grid; grid-template-columns: var(--page-w) 0.75rem var(--page-w); height: var(--page-h);
-  box-shadow: 0 40px 70px -30px oklch(0.05 0.01 50 / 90%); }
-.book-page { position: relative; height: var(--page-h); overflow: hidden; }
-.book-page-left { overflow-y: auto; border-radius: 3px 0 0 3px; }
-.book-page-right { background: oklch(0.83 0.03 78); border-radius: 0 3px 3px 0; color: var(--paper-foreground); }
-.book-gutter { background: linear-gradient(90deg, oklch(0.6 0.03 70), oklch(0.42 0.03 60) 50%, oklch(0.6 0.03 70)); }
-.book-cover { position: absolute; top: 0; right: 0; width: var(--page-w); height: var(--page-h); object-fit: fill;
-  transform-origin: left center; border-radius: 0 3px 3px 0; box-shadow: 0 30px 50px -20px oklch(0.05 0.01 50 / 90%);
+.book-scroll { max-height: calc(100vh - 4rem); max-height: calc(100dvh - 4rem); overflow-y: auto;
+  border-radius: 3px; box-shadow: var(--shadow-book); overscroll-behavior: contain; }
+.book-spread { display: grid; grid-template-columns: minmax(0, 1fr) 0.75rem minmax(0, 1fr); min-height: var(--page-h); }
+.book-page { position: relative; min-width: 0; min-height: var(--page-h); }
+.book-page-left { border-radius: 3px 0 0 3px; }
+.book-page-right { background: var(--book-plate); border-radius: 0 3px 3px 0; color: var(--paper-foreground); }
+.book-gutter { background: var(--book-binding); }
+.book-info { overflow-wrap: anywhere; }
+.book-cover { position: absolute; top: 0; right: 0; width: var(--page-w); height: auto; aspect-ratio: 595 / 842; object-fit: contain;
+  transform-origin: left center; border-radius: 0 3px 3px 0; box-shadow: var(--shadow-cover);
   animation: cover-rise 0.38s cubic-bezier(.2,.7,.2,1) both; backface-visibility: hidden; }
 .open-book[data-phase="opening"] .book-cover { animation: cover-hinge 0.62s cubic-bezier(.45,.05,.3,1) both; }
 .open-book[data-phase="cover"] .book-spread { opacity: 0; }
@@ -333,7 +341,6 @@
 .open-book:not([data-phase="open"]) .book-page-content { visibility: hidden; opacity: 0; }
 .open-book[data-phase="open"] .book-page-content { animation: lib-fade-in 0.28s ease-out both; }
 .open-book[data-phase="closing"] .book-spread { animation: book-out 0.22s ease-in both; }
-.open-book[data-phase="cover"] .book-close, .open-book[data-phase="opening"] .book-close { opacity: 0; pointer-events: none; }
 @keyframes cover-rise { from { opacity: 0; transform: translateY(30px) scale(0.85); } }
 @keyframes cover-hinge {
   from { transform: perspective(2200px) rotateY(0); }
@@ -347,14 +354,25 @@
   box-shadow: 0 6px 14px -4px oklch(0.05 0.01 50 / 80%); }
 .book-close:hover { background: var(--dark-brown); }
 
-/* Phones/tablets: one tall sheet, info above the plate; scrolls inside, page stays locked. */
-@media (max-width: 767px) {
-  .open-book { --page-w: min(calc(100vw - 1.5rem), 28rem); --page-h: calc(var(--page-w) * 1.415); }
-  .book-scroll { max-height: 88vh; max-height: 88dvh; overflow-y: auto; border-radius: 3px; }
-  .book-spread { grid-template-columns: var(--page-w); grid-template-rows: auto 0.6rem var(--page-h); height: auto; }
-  .book-page-left { height: auto; overflow: visible; border-radius: 3px 3px 0 0; }
-  .book-page-right { border-radius: 0 0 3px 3px; }
-  .book-gutter { background: linear-gradient(180deg, oklch(0.6 0.03 70), oklch(0.42 0.03 60) 50%, oklch(0.6 0.03 70)); }
-  .book-cover { left: 0; right: auto; width: auto; height: min(var(--page-h), 88dvh); aspect-ratio: 595 / 842; border-radius: 3px; }
+/* Narrow tablets: a full-width bound leaf, not a compressed spread.
+   Only the shared book-scroll can scroll; empty media/contribution placeholders
+   remain on desktop but do not create blank mobile pages. */
+@media (max-width: 959px) {
+  .open-book { --page-w: min(calc(100vw - 2rem), 35rem); --page-h: calc(var(--page-w) * 842 / 595); width: var(--page-w); }
+  .book-spread { position: relative; display: block; background: var(--paper); border-left: 0.65rem solid var(--dark-brown); }
+  .book-spread::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 0.5rem; background: var(--book-binding); z-index: 1; pointer-events: none; }
+  .book-page-left { min-height: var(--page-h); border-radius: 0 3px 3px 0; }
+  .book-page-right { min-height: 0; border-top: 1px solid var(--rule); background: var(--paper); }
+  .book-page-right[data-media-state="empty"], .book-contribution[data-unconfirmed], .book-gutter { display: none; }
+  .book-running-head { padding-right: 2.5rem; }
+  .book-cover { right: auto; left: 50%; width: min(var(--page-w), calc((100dvh - 4rem) * 595 / 842)); translate: -50% 0; border-radius: 3px; }
   .book-close { top: 0.5rem; right: 0.5rem; }
+}
+
+/* Phones: continuous editorial page with lighter binding and touch clearance. */
+@media (max-width: 599px) {
+  .open-book { --page-w: calc(100vw - 1.5rem); }
+  .book-spread { border-left-width: 0.4rem; }
+  .book-info { padding: 3.75rem 1.25rem 1.75rem 1.5rem; }
+  .book-running-head { padding-right: 0; }
 }

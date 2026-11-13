@@ -37,3 +37,4 @@ use the editor.
 - Experience uses `src/components/folder/FolderTabs.tsx` (custom tabs, starts closed); Skills uses Radix Tabs in `src/components/skills/CardCatalog.tsx` (manual activation, first drawer open, orientation follows viewport); CV text in content data is copied verbatim — keeps invented facts out.
 - Custom scrollbars apply only to `html` and elements with the `scrollbar-archive` utility, on fine pointers — phones keep native scrollbars.
 - Project Library: books are data in `src/content/projects.ts` with artwork as `.asset.json` pointers per project; `OpenBook` wraps Radix Dialog and runs a CSS phase sequence (timings exported from the component) — keeps artwork untouched and modal a11y native.
+- Opened books use one shared scroll surface: readable two-page spreads at 960px+, a bound single leaf below 960px, and mobile spacing below 600px — prevents compressed text and nested scrolling without duplicating content.

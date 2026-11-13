@@ -89,6 +89,19 @@ describe("ProjectLibrary", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
+  it("can close during the cover reveal without the opening timers restoring the book", async () => {
+    await setup();
+    const spine = screen.getByRole("button", { name: /Olist/ });
+    fireEvent.click(spine);
+    await act(async () => { await vi.advanceTimersByTimeAsync(LIFT_MS + 1000); });
+    expect(screen.getByTestId("open-book")).toHaveAttribute("data-phase", "cover");
+    fireEvent.click(screen.getByRole("button", { name: "Fechar livro" }));
+    await act(async () => { await vi.advanceTimersByTimeAsync(CLOSE_MS + COVER_MS + HINGE_MS + 10); });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    await act(async () => { await vi.advanceTimersByTimeAsync(10); });
+    expect(document.activeElement).toBe(spine);
+  });
+
   it("closes on an outside click but not on a click inside the book", async () => {
     await setup();
     await openFirst();

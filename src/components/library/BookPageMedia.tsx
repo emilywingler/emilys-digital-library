@@ -29,7 +29,7 @@ export function BookPageMedia({ project, locale, emptyLabel }: { project: Projec
   if (project.media.length === 0) {
     return (
       <div data-media-empty className="relative flex h-full items-center justify-center overflow-hidden">
-        <img src={project.cover[locale]} alt="" className="absolute inset-0 h-full w-full object-cover opacity-15 sepia" />
+        <img src={project.cover[locale]} alt="" className="absolute inset-0 h-full w-full object-contain opacity-15 sepia" />
         <p className="relative border border-paper-foreground/30 px-5 py-3 text-center font-masthead text-xs uppercase tracking-[0.25em] text-paper-muted outline outline-1 outline-offset-4 outline-paper-foreground/15">
           {emptyLabel}
         </p>

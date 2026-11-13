@@ -27,7 +27,8 @@ interface Props {
  * Floating open book. Radix Dialog supplies focus trap, Escape, outside-click,
  * scroll lock and labelling; this component only adds the phase sequence:
  * cover shown → cover swings open on its left edge → pages fade in → (closing).
- * Page content stays hidden until the hinge finishes. Reduced motion jumps
+ * One shared scroll surface contains both pages; CSS switches to a bound
+ * vertical leaf when two readable pages cannot fit. Page content stays hidden until the hinge finishes. Reduced motion jumps
  * straight to "open" and closes instantly.
  */
 export function OpenBook({ project, locale, t, reduceMotion, onClosed, returnFocus }: Props) {
@@ -64,7 +65,7 @@ export function OpenBook({ project, locale, t, reduceMotion, onClosed, returnFoc
               <div className="book-spread">
                 <section className="book-page book-page-left paper"><div className="book-page-content h-full"><BookPageInfo project={project} locale={locale} t={t} /></div></section>
                 <div className="book-gutter" aria-hidden="true" />
-                <section className="book-page book-page-right" aria-label={t.plateLabel}><div className="book-page-content h-full"><BookPageMedia project={project} locale={locale} emptyLabel={t.plateEmpty} /></div></section>
+                 <section className="book-page book-page-right" data-media-state={project.media.length ? "available" : "empty"} aria-label={t.plateLabel}><div className="book-page-content h-full"><BookPageMedia project={project} locale={locale} emptyLabel={t.plateEmpty} /></div></section>
               </div>
             </div>
             {phase !== "open" && phase !== "closing" && (
