@@ -18,7 +18,7 @@ export function HomeFrontPage({ profile }: Props) {
   const { locale, t } = useLocale();
   return (
     <section id="home" aria-labelledby="home-title" className="px-3 pb-12 pt-6 sm:px-6 sm:pt-10">
-      <article className="paper relative mx-auto max-w-5xl animate-ink px-5 py-6 sm:px-10 sm:py-10">
+      <article className="paper relative mx-auto max-w-5xl home-reveal px-5 py-6 sm:px-10 sm:py-10">
         <Flourish className="pointer-events-none absolute left-2 top-2 h-8 w-8 text-paper-muted/60" />
         <Flourish className="pointer-events-none absolute right-2 top-2 h-8 w-8 rotate-90 text-paper-muted/60" />
         <Flourish className="pointer-events-none absolute bottom-2 left-2 h-8 w-8 -rotate-90 text-paper-muted/60" />
@@ -26,7 +26,7 @@ export function HomeFrontPage({ profile }: Props) {
 
         <NewspaperMasthead />
 
-        <header className="mt-8 border-b border-rule pb-6 text-center">
+        <header className="headline-hover mt-8 border-b border-rule pb-6 text-center">
           <h1 id="home-title" className="font-display text-5xl font-semibold leading-[0.95] tracking-tight sm:text-7xl">
             {profile.name}
           </h1>
@@ -49,7 +49,7 @@ export function HomeFrontPage({ profile }: Props) {
 
         <Divider className="mt-8 h-4 w-full text-paper-muted" />
         <div className="mt-4 text-center">
-          <a href="#experience" className="inline-flex items-center gap-2 font-display text-lg italic hover:text-olive">
+          <a href="#experience" className="link-draw inline-flex items-center gap-2 font-display text-lg italic hover:text-olive">
             {t.home.explore} <OrnateArrow direction="down" length="1.6rem" />
           </a>
         </div>

@@ -44,3 +44,5 @@ use the editor.
 - Every visible arrow is `src/components/decor/OrnateArrow.tsx` (the supplied SVG pointer used as a `currentColor` mask, rotated only, aspect locked) — one faithful artwork, recolourable everywhere.
 - The Journal renders `journalSlots` (`JournalSlot` union: `article` | `upcoming`) in a one-at-a-time carousel whose slides share a grid cell, with inactive slides `inert` — stable height, swap placeholder by data only.
 - OpenBook closes `open → folding → returning` (cover/opening skip to returning); the return transform is measured from the spine rect at return start — keeps the physical-book metaphor without new deps.
+- Motion: shared tokens/keyframes live in the "Milestone 8 — motion system" block of `src/styles.css`; one `StarCursor` (fine pointers only) labels controls via `resolveCursor` in `src/components/cursor/cursorLabel.ts`; section entrances use `[data-reveal]` + `useRevealOnce` (visible by default) — one system, no animation library.
+- OpenBook page visibility is driven only by `data-phase` on `.book-scroll` (hidden in cover/returning, fades in/out in opening/folding), never tied to the cover — prevents blank page rectangles.

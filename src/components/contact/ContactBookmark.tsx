@@ -15,8 +15,8 @@ export function ContactBookmark({ links }: { links: ContactLink[] }) {
   const { t } = useLocale();
   return (
     <footer id="contact" aria-labelledby="contact-title" className="px-4 pb-14 pt-10 sm:px-6">
-      <div className="relative mx-auto max-w-sm md:max-w-4xl">
-        <Tassel className="pointer-events-none absolute -top-6 left-5 z-10 h-28 w-9 text-gold md:-left-12 md:top-1/2 md:-translate-y-1/2 md:rotate-90" />
+      <div className="bookmark-wrap relative mx-auto max-w-sm md:max-w-4xl" data-reveal>
+        <Tassel className="tassel-sway pointer-events-none absolute -top-6 left-5 z-10 h-28 w-9 text-gold md:-left-12 md:top-1/2 md:-translate-y-1/2 md:rotate-90" />
         <div className="bookmark paper relative rounded-t-[1.5rem] px-6 pb-6 pt-12 md:rounded-l-[1.5rem] md:rounded-tr-none md:px-12 md:py-8">
           <span className="bookmark-hole" aria-hidden="true" />
           <div className="pointer-events-none absolute inset-2 rounded-t-[1.1rem] border border-gold/60 md:rounded-l-[1.1rem] md:rounded-tr-none" aria-hidden="true" />
@@ -41,7 +41,7 @@ export function ContactBookmark({ links }: { links: ContactLink[] }) {
                       <Icon className="h-4 w-4 shrink-0" aria-hidden />
                       <span className="flex min-w-0 flex-col">
                         <span className="font-masthead text-xs uppercase tracking-[0.2em] text-paper-muted">{l.label}</span>
-                        <span className="break-all font-display text-lg leading-tight">{l.display}</span>
+                        <span className="link-draw-gold break-all font-display text-lg leading-tight">{l.display}</span>
                       </span>
                       {external && <span className="sr-only">{t.contact.newTab}</span>}
                     </a>

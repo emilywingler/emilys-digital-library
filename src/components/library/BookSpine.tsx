@@ -30,10 +30,13 @@ export const BookSpine = forwardRef<HTMLButtonElement, Props>(({ project, title,
     className="book-spine relative shrink-0 cursor-pointer"
     style={{ height: `calc(${project.spineHeight}rem * var(--spine-scale))` }}
   >
+    {/* Hover lean lives on this inner layer so the button's measured rect never moves. */}
+    <span className="book-spine-body">
     <img src={project.spine} alt="" loading="lazy" decoding="async" draggable={false} className="h-full w-full object-fill" />
     {/* Title layer over the empty band between the stars and the printed name.
         aria-hidden: the button label already names the book. */}
     <span aria-hidden="true" className="spine-title" data-spine-title>{title.replace(/-/g, "\u2011")}</span>
+    </span>
   </button>
 ));
 BookSpine.displayName = "BookSpine";

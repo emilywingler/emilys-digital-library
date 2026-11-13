@@ -26,7 +26,7 @@ export function WinglerJournal({ slots }: { slots: JournalSlot[] }) {
     if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
   };
   return (
-    <section id="journal" aria-labelledby="journal-heading" className="px-4 py-16 sm:px-6">
+    <section data-reveal id="journal" aria-labelledby="journal-heading" className="px-4 py-16 sm:px-6">
       <div className="paper journal-sheet mx-auto max-w-5xl px-5 py-10 sm:px-10">
         <header className="text-center">
           <p className="font-masthead text-xs uppercase tracking-[0.3em] text-paper-muted">{t.journal.kicker}</p>

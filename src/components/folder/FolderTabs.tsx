@@ -50,7 +50,7 @@ export function FolderTabs({ items, label, hint }: { items: FolderItem[]; label:
       <div id={`${uid}-panel`} role={current ? "tabpanel" : undefined}
         aria-labelledby={current ? `${uid}-tab-${open}` : undefined}
         className="folder-sheet relative z-10 min-h-56 rounded-b-md rounded-tr-md px-6 py-8 sm:px-10">
-        {current ? <div key={current.id} className="animate-folder">{current.content}</div>
+        {current ? <div key={current.id} className="folder-turn">{current.content}</div>
           : <p className="flex min-h-40 items-center justify-center font-display text-lg italic text-paper-muted">{hint}</p>}
       </div>
     </div>

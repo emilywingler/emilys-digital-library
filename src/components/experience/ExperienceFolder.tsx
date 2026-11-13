@@ -25,7 +25,7 @@ export function ExperienceFolder({ entries }: { entries: ExperienceEntry[] }) {
     ),
   }));
   return (
-    <section id="experience" aria-labelledby="experience-title" className="mx-auto max-w-5xl px-3 py-12 sm:px-6">
+    <section data-reveal id="experience" aria-labelledby="experience-title" className="mx-auto max-w-5xl px-3 py-12 sm:px-6">
       <h2 id="experience-title" className="mb-4 font-display text-3xl italic text-foreground">
         <span className="block font-masthead text-xs not-italic uppercase tracking-[0.3em] text-primary">{t.experience.kicker}</span>
         {t.experience.title}

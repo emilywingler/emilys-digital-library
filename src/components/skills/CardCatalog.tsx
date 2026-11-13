@@ -27,12 +27,12 @@ export function CardCatalog({ categories, locale, label, cardLabels, experienceN
               <span className="border-r border-gold/60 px-1.5 py-1 font-masthead tabular-nums">{String(i + 1).padStart(2, "0")}</span>
               <span className="flex-1 px-1.5 py-1 text-left font-masthead uppercase leading-tight tracking-[0.06em]">{c.label[locale]}</span>
             </span>
-            <BrassPull className="mt-1 h-3 w-8 text-gold/80 group-data-[state=active]:text-gold" />
+            <BrassPull className="catalog-pull mt-1 h-3 w-8 text-gold/80 group-data-[state=active]:text-gold" />
           </Tabs.Trigger>
         ))}
       </Tabs.List>
       {categories.map((c) => (
-        <Tabs.Content key={c.id} value={c.id} className="animate-folder focus-visible:outline-none" lang={locale === "pt" ? "pt-BR" : "en"}>
+        <Tabs.Content key={c.id} value={c.id} className="catalog-drawer focus-visible:outline-none" lang={locale === "pt" ? "pt-BR" : "en"}>
           <ul className="grid gap-4 sm:grid-cols-2">
             {c.skills.map((s) => (
               <IndexCard key={s.code} skill={s} locale={locale} labels={cardLabels} experienceNames={experienceNames} />

@@ -1,3 +1,6 @@
+import { useRef } from "react";
+import { StarCursor } from "@/components/cursor/StarCursor";
+import { useRevealOnce } from "@/hooks/useRevealOnce";
 import { HomeFrontPage } from "@/components/home/HomeFrontPage";
 import { contactLinks } from "@/content/links";
 import { profile } from "@/content/profile";
@@ -18,13 +21,15 @@ import { ContactBookmark } from "@/components/contact/ContactBookmark";
  * page is duplicated per language.
  */
 export function PortfolioPage() {
+  const main = useRef<HTMLElement>(null);
+  useRevealOnce(main);
   return (
     <>
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">
         Skip to content
       </a>
       <SiteHeader />
-      <main id="main">
+      <main id="main" ref={main}>
         <HomeFrontPage profile={profile} />
         <ExperienceFolder entries={experience} />
         <SkillsCatalog categories={skillCategories} experience={experience} />
@@ -32,6 +37,7 @@ export function PortfolioPage() {
         <WinglerJournal slots={journalSlots} />
         <ContactBookmark links={contactLinks} />
       </main>
+      <StarCursor />
     </>
   );
 }
