@@ -1,44 +1,65 @@
 # Targeted refinements: Journal carousel, book closing, custom arrow
 
+The first build step adds these tasks to `roadmap.md`.
+
 ## 1. Custom arrow (used everywhere an arrow appears)
-- Upload `Seta.png` as-is (341x1164, pale ornate arrow pointing up) and wrap it in one reusable `OrnateArrow` component in `src/components/decor/`, with a `direction` prop (up/down/left/right) that only rotates it. Proportions are never stretched.
-- The arrow takes on the surrounding text colour, so it stays readable on parchment and dark backgrounds. It is decorative and hidden from screen readers. Buttons keep their own labels.
-- Note: the file is a PNG image, not a true vector. It will look sharp at button sizes, but it isn't infinitely scalable.
-- Arrows it replaces on the visible site:
-  - Home: the down arrow in "Explorar a biblioteca".
-  - Project books: the previous/next plate buttons (currently chevrons).
-  - Journal: the new carousel's previous/next buttons.
-- Not changed: close (X), menu, contact icons, and the unused built-in UI kit files. Those kit files never appear on the site.
+- Source checked:
+  - The SVG you uploaded is the true vector version of `Seta.png`: same 340x1163 artwork, a single solid fill, pointing up.
+  - The PNG is also a clean single-colour silhouette on transparency.
+  - Both can be recoloured faithfully, so I'll use the SVG for sharpness.
+  - It gets uploaded unchanged. No redrawing, no filters.
+- One `OrnateArrow` component in `src/components/decor/`. The artwork works as a CSS mask filled with `currentColor`, so it takes on the button or text colour on both parchment and dark backgrounds.
+  - Fixed aspect ratio, with height set by size. Never stretched.
+  - `direction` only rotates it: down for Home, left for previous, right for next.
+  - The arrow is decorative and hidden from screen readers. Buttons keep their own localized labels, visible gold focus ring and a 44x44px minimum target.
+- Replaced on the visible site:
+  - Home: the "Explorar a biblioteca" arrow (down).
+  - Book plates: previous/next buttons (left/right).
+  - Journal: the new carousel buttons.
+- Not changed: X, menu, contact icons, and unused UI-kit files that never appear on the site.
 
 ## 2. Journal carousel
-- Data: the journal list gets a second entry type, `upcoming`, which has no title, excerpt, date, reading time or link. SheBuilds stays exactly as it is now (first entry, in progress, Medium button visible but disabled).
-- New small `JournalCarousel` shows one entry at a time, with no autoplay and a plain crossfade. Animation is skipped when reduced motion is on.
-  - Subtle round previous/next buttons with the ornate arrow and labels such as "Artigo anterior" / "Previous article". They wrap around.
-  - Position counter `01 / 02`, announced politely to screen readers.
-  - Left/Right arrow keys work while focus is inside the carousel.
-  - Touch targets are 44px. Nothing scrolls sideways on mobile.
-- Upcoming placeholder: a designed plate drawn in code (no generated image). It has parchment, a gold double rule, the twin-star ornament and a short line like "Novos ensaios em breve" / "More essays forthcoming". It has no stamp, no CTA and no fake metadata.
-- The title area stays the same. The single-article "feature" layout is reused for every slide.
-- Later, swap the placeholder for a real article by replacing the data entry. The carousel itself doesn't change.
+- Data: `JournalEntry` becomes `{ kind: "article", ...JournalArticle } | { kind: "upcoming", id }`. The upcoming entry has no title, excerpt, date, reading time, URL or status fields at all. SheBuilds stays first and unchanged.
+- Rendering by type:
+  - Article: the existing `JournalEntry` view, unchanged, with the disabled Medium button.
+  - Upcoming: a plate drawn in code (parchment, gold double rule, twin-star ornament) and one localized line, e.g. "Novos ensaios em breve" / "More essays forthcoming". No metadata row, stamp or CTA.
+- Stable size: all slides sit in one grid cell, so the carousel keeps the height of the tallest slide. Switching entries causes no layout jump.
+- Accessibility:
+  - Only the active slide is rendered visible. Inactive slides get `hidden`/`inert`, so they can't be tabbed to or reached by screen readers.
+  - The crossfade animates only the incoming slide's opacity. It is skipped with reduced motion.
+  - The `01 / 02` counter lives in its own `aria-live="polite"` `aria-atomic` element.
+  - The carousel is a `role="region"` with `aria-roledescription="carousel"` and a localized label.
+  - Buttons say "Artigo anterior/seguinte" / "Previous/Next article".
+- Keyboard: Left/Right work only on keydown inside the carousel, with `preventDefault` there only. They're ignored while focus is in a text field. Navigation wraps both ways (last to first, first to last).
+- No autoplay, no new dependencies. To replace the placeholder later, swap the data entry.
 
 ## 3. Physical book closing
-Current behaviour: closing fades the pages out in 220ms, like a modal. New sequence, reusing the existing cover image and phases:
-1. `folding`: the page content fades and the cover swings back closed (the opening hinge played in reverse), about 520ms.
-2. `returning`: the closed cover shrinks and moves toward the spine's real position on the shelf, while the overlay fades, about 420ms. The position is measured from the spine at close time; the dialog sets a CSS transform to it.
-3. The dialog unmounts, the spine's "lifted" state clears, and focus returns to the spine (existing logic).
-- X, Escape and outside click all use this sequence. Repeat close requests during it are ignored, and other spines can't open until it ends (the existing `open || liftedId` guard already covers this).
-- Closing during the opening cover phase jumps straight to `returning`.
-- Reduced motion: closes immediately, as now.
-- The opening animation, covers, spines and content are untouched.
+Phases become `cover | opening | open | folding | returning`.
+- Close request by phase:
+  - `cover` or `opening`: cancel the opening timers and go straight to `returning`.
+  - `open`: `folding` (the cover swings shut, reverse hinge, about 520ms), then `returning` (about 420ms).
+  - `folding` or `returning`: ignored.
+- This covers X, Escape and outside click (Radix `onOpenChange`). Reduced motion closes immediately, with no timers.
+- Return geometry, measured once when `returning` starts:
+  - Spine rect from `getOrigin()` and the cover's own current rect (`getBoundingClientRect`).
+  - `dx/dy` = spine centre minus cover centre; scale = spine height / cover height.
+  - These are applied as CSS vars on the cover (`translate` + `scale`, origin at the centre), so the end state lines up with the spine whatever the layout (spread or single leaf). The overlay fades at the same time.
+  - Fallback: if the rect is missing or zero-sized, the cover shrinks and fades in place (current-style) and the sequence still completes.
+- Lifecycle:
+  - The spine stays lifted until the return ends. Then the dialog unmounts, `liftedId` clears and focus returns to the spine (existing logic).
+  - The `open || liftedId` guard blocks any other opening until then.
+  - All timers live in one ref and are cleared on unmount and on phase change.
+  - A per-open token makes sure a stale callback can't affect a book opened later.
+- The opening animation, covers, spines and content are unchanged.
 
 ## Technical details
-- `OpenBook`: phases become `cover | opening | open | folding | returning`. `FOLD_MS` and `RETURN_MS` are exported and replace `CLOSE_MS`. A new prop `getOrigin(): DOMRect | undefined` comes from `ProjectLibrary` (the spine ref). The cover `<img>` also renders during folding/returning.
-- CSS: `cover-fold` keyframes (reverse of `cover-hinge`), plus a `book-return` transform using the `--ret-x/--ret-y/--ret-s` vars. This works in both the 960px+ spread and the single-leaf layout.
-- Tests: update `project-library.test.tsx` for the new phases and timings, covering:
-  - close via X, Escape and outside click, with focus returning;
-  - reopening repeatedly;
-  - no other book opening mid-close;
-  - reduced motion.
-- Add journal tests: two slides, `01 / 02`, next/prev and arrow keys, the placeholder has no link/CTA, SheBuilds stays disabled.
-- Browser check: PT/EN at 1440, 1024, 768, 390 and 360px, plus the open/close cycle repeated.
-- Update `AGENTS.md` (arrow rule, journal carousel rule) and `docs/ARCHITECTURE.md`.
+- `OpenBook` exports `FOLD_MS` and `RETURN_MS` (replacing `CLOSE_MS`) and gets a new prop `getOrigin: () => DOMRect | undefined`. The cover `<img>` renders in every phase except `open`. CSS: `cover-fold` keyframes and the `returning` transform vars.
+- `ProjectLibrary` passes `getOrigin` from `spineRefs`.
+- Tests: `project-library.test.tsx` is updated, plus new journal tests:
+  - Book: close via X, Escape and outside click during cover, opening and open; repeated close requests ignored; reopening repeatedly; no other book opens mid-close; spine stays lifted until the end; focus returns; reduced motion is immediate.
+  - Journal: two slides, `01 / 02`, wrap both ways via buttons and keys, only the active slide is exposed, the placeholder has no link/CTA/metadata, SheBuilds stays disabled.
+- Browser (Playwright, Chromium): PT/EN at 1440, 1024, 768, 390 and 360px.
+  - No horizontal overflow; arrows checked on parchment and dark backgrounds; carousel steady between slides.
+  - Close animation frames confirm the cover ends on the spine; repeated open/close cycles.
+  - The report keeps automated tests and browser checks separate.
+- Docs: `AGENTS.md` (arrow rule, journal entry union, close phases) and `docs/ARCHITECTURE.md`, written to match what was actually built.
