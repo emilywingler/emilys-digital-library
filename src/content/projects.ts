@@ -19,7 +19,7 @@ import bakerySpine from "@/assets/projects/bakery/spine.svg.asset.json";
  */
 export const projects: Project[] = [
   {
-    id: "olist", catalogNo: "PRJ-001", shelf: 1, order: 2, featured: true, spineHeight: 19,
+    id: "olist", catalogNo: "PRJ-001", shelf: 1, order: 3, featured: true, spineHeight: 19,
     title: { pt: "Análise do E-commerce Olist", en: "Olist E-commerce Analysis" },
     intro: {
       pt: "Quem vende mais no marketplace — e quanto essa resposta depende das definições?",
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     cover: { pt: olistCoverPt.url, en: olistCoverEn.url }, spine: olistSpine.url, media: [],
   },
   {
-    id: "pendulum", catalogNo: "PRJ-002", shelf: 1, order: 4, featured: true, spineHeight: 18,
+    id: "pendulum", catalogNo: "PRJ-002", shelf: 1, order: 4, featured: true, spineHeight: 21,
     title: { pt: "Controle de Estabilidade de um Pêndulo Bimotor", en: "Bimotor Pendulum Stability Control" },
     intro: {
       pt: "Uma haste com dois motores que volta sempre ao ângulo escolhido — mesmo depois de um empurrão.",
@@ -59,7 +59,7 @@ export const projects: Project[] = [
     cover: { pt: pendulumCoverPt.url, en: pendulumCoverEn.url }, spine: pendulumSpine.url, media: [],
   },
   {
-    id: "ml-studies", catalogNo: "PRJ-003", shelf: 2, order: 1, featured: false, spineHeight: 19.5,
+    id: "ml-studies", catalogNo: "PRJ-003", shelf: 1, order: 5, featured: false, spineHeight: 19.5,
     title: { pt: "Estudos em Machine Learning e Data Science", en: "Machine Learning & Data Science Studies" },
     intro: {
       pt: "Um caderno de estudos aberto: dos fundamentos de dados a LLMs e MLOps.",
@@ -79,7 +79,7 @@ export const projects: Project[] = [
     cover: { pt: studiesCoverPt.url, en: studiesCoverEn.url }, spine: studiesSpine.url, media: [],
   },
   {
-    id: "bakery", catalogNo: "PRJ-004", shelf: 2, order: 3, featured: false, spineHeight: 18.5,
+    id: "bakery", catalogNo: "PRJ-004", shelf: 1, order: 6, featured: false, spineHeight: 18.5,
     title: { pt: "Sistema de Gestão de Padaria", en: "Bakery Management System" },
     intro: {
       pt: "Trocando o caderno de contas da padaria do Sr. Oak por um sistema orientado a objetos.",
@@ -103,12 +103,16 @@ export const projects: Project[] = [
 
 /** Shelf fillers that balance the composition. Never interactive. */
 export const shelfDecor: ShelfDecor[] = [
-  { id: "d1", kind: "book", shelf: 1, order: 1, height: 15, width: 2, tone: 1 },
-  { id: "d2", kind: "book", shelf: 1, order: 3, height: 16.5, width: 1.6, tone: 3 },
-  { id: "d3", kind: "book", shelf: 1, order: 5, height: 14, width: 2.3, tone: 2, lean: true },
-  { id: "g1", kind: "globe", shelf: 1, order: 6 },
-  { id: "p1", kind: "plant", shelf: 2, order: 0 },
-  { id: "d4", kind: "book", shelf: 2, order: 2, height: 15.5, width: 1.8, tone: 4 },
-  { id: "d5", kind: "book", shelf: 2, order: 4, height: 13.5, width: 2.4, tone: 1 },
-  { id: "d6", kind: "book", shelf: 2, order: 5, height: 16, width: 1.5, tone: 2 },
+  // Shelf 1: the four project books stand together in the middle.
+  { id: "d1", kind: "book", shelf: 1, order: 1, height: 15, width: 2, tone: 1, label: "XII" },
+  { id: "d2", kind: "book", shelf: 1, order: 2, height: 16.5, width: 1.6, tone: 3, label: "IV" },
+  // Leans outward, away from the project group, so it never covers a spine.
+  { id: "d3", kind: "book", shelf: 1, order: 7, height: 14, width: 2.3, tone: 2, lean: true, label: "VII" },
+  { id: "g1", kind: "globe", shelf: 1, order: 8 },
+  // Shelf 2: decoration gathered at the sides, open space in the middle.
+  { id: "p1", kind: "plant", shelf: 2, order: 0, side: "start" },
+  { id: "d4", kind: "book", shelf: 2, order: 1, height: 15.5, width: 1.8, tone: 4, label: "II", side: "start" },
+  { id: "d5", kind: "book", shelf: 2, order: 2, height: 13.5, width: 2.4, tone: 1, label: "IX", side: "start" },
+  { id: "d6", kind: "book", shelf: 2, order: 3, height: 16, width: 1.5, tone: 2, label: "III", side: "end" },
+  { id: "d7", kind: "book", shelf: 2, order: 4, height: 14.5, width: 2, tone: 3, label: "XI", side: "end" },
 ];

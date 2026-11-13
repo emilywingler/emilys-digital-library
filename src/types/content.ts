@@ -107,4 +107,8 @@ export interface ShelfDecor {
   width?: number;
   tone?: 1 | 2 | 3 | 4;
   lean?: boolean;
+  /** Book only: faint decorative marking (numeral/word); never a real title. */
+  label?: string;
+  /** Shelves without projects: which wall the item gathers against. */
+  side?: "start" | "end";
 }

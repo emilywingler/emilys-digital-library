@@ -9,12 +9,14 @@ export function DecorItem({ item }: { item: ShelfDecor }) {
     <span
       aria-hidden="true"
       data-decor-book
-      className={`decor-book shrink-0 ${item.lean ? "origin-bottom-left rotate-[-7deg]" : ""}`}
+      className={`decor-book shrink-0 ${item.lean ? "decor-book-lean" : ""}`}
       style={{
         height: `calc(${item.height}rem * var(--spine-scale))`,
         width: `calc(${item.width}rem * var(--spine-scale))`,
         backgroundColor: `var(--decor-book-${item.tone ?? 1})`,
       }}
-    />
+    >
+      {item.label && <span className="decor-book-label">{item.label}</span>}
+    </span>
   );
 }

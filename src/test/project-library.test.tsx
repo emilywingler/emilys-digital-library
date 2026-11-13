@@ -38,9 +38,19 @@ describe("ProjectLibrary", () => {
     decor.forEach((d) => { expect(d.closest("button")).toBeNull(); expect(d.closest('[aria-hidden="true"]')).not.toBeNull(); });
   });
 
-  it("draws no text over the spine artwork", async () => {
+  it("groups the four project books together on the main shelf", async () => {
     await setup();
-    for (const b of screen.getAllByRole("button", { name: /^Abrir livro/ })) expect(b.textContent).toBe("");
+    const rows = document.querySelectorAll(".shelf-row");
+    expect(within(rows[0] as HTMLElement).getAllByRole("button", { name: /^Abrir livro/ })).toHaveLength(4);
+    expect(within(rows[1] as HTMLElement).queryAllByRole("button")).toHaveLength(0);
+  });
+
+  it("writes the localized title on each spine", async () => {
+    await setup("/en");
+    for (const p of projects) {
+      const b = screen.getByRole("button", { name: `Open book: ${p.title.en}` });
+      expect(b.querySelector("[data-spine-title]")).toHaveTextContent(p.title.en.replace(/-/g, "\u2011"));
+    }
   });
 
   it("opens the book with the localized cover, then reveals the pages", async () => {

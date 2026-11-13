@@ -297,6 +297,7 @@
   border-radius: 1px;
 }
 @utility book-spine {
+  position: relative;
   aspect-ratio: 137 / 842;
   box-shadow: 2px 0 3px oklch(0.06 0.01 50 / 60%), inset -1px 0 0 oklch(1 0 0 / 8%);
   transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
@@ -309,6 +310,26 @@
     linear-gradient(180deg, transparent 12%, oklch(0.74 0.085 82 / 45%) 12% 13%, transparent 13% 87%, oklch(0.74 0.085 82 / 45%) 87% 88%, transparent 88%);
   box-shadow: 2px 0 3px oklch(0.06 0.01 50 / 50%);
   opacity: 0.85;
+  position: relative;
+}
+/* Leans outward (top away from its left neighbour), never over a spine. */
+@utility decor-book-lean { transform-origin: bottom left; transform: rotate(6deg); margin-right: 1.2rem; }
+@utility decor-book-label {
+  position: absolute; left: 50%; top: 22%; transform: translateX(-50%);
+  writing-mode: vertical-rl; font-family: var(--font-masthead); letter-spacing: 0.15em;
+  font-size: calc(0.55rem * var(--spine-scale)); color: oklch(0.74 0.085 82 / 45%);
+}
+/* Spine title: band from below the stars (~17%) to above the name (~72%).
+   vertical-rl matches the printed name: top-to-bottom, first line on the right. */
+@utility spine-title {
+  position: absolute; left: 8%; right: 8%; top: 18%; bottom: 29%;
+  display: flex; align-items: center; justify-content: center;
+  writing-mode: vertical-rl; text-align: center; text-wrap: balance;
+  container-type: normal;
+  font-family: var(--font-masthead); line-height: 1.05;
+  font-size: calc(0.88rem * var(--spine-scale)); color: oklch(0.83 0.15 85);
+  text-shadow: 0 1px 1px oklch(0.1 0.02 50 / 60%);
+  overflow-wrap: normal; pointer-events: none;
 }
 
 .book-overlay { background: var(--book-overlay); backdrop-filter: blur(2px); animation: lib-fade-in 0.25s ease-out both; }

@@ -30,6 +30,7 @@ Replace imports from `src/content` in `PortfolioPage` with a loader/query that r
 ## Project Library
 - Data: `src/content/projects.ts` (`Project[]` + `ShelfDecor[]`). Shelf, order and `catalogNo` are explicit fields — never derived from array position.
 - Artwork: `src/assets/projects/<id>/{cover-pt,cover-en,spine}.svg.asset.json` (CDN pointers to the untouched uploads). Covers switch with the locale; spines are shared.
+- Spine titles: `BookSpine` draws the localized `title` as a vertical IM Fell text layer in the artwork's blank band (18%–71% of height), never over the printed name. A title too long for two lines gets a taller `spineHeight` (proportional widening), never a smaller font. Decorative books take optional faint `label` and `side` (decor-only shelves split between walls).
 - Components (`src/components/library/`): `ProjectLibrary` (open state + spine lift/preload) → `Bookshelf` → `BookSpine` / `DecorItem`; `OpenBook` (Radix Dialog) → `BookPageInfo` + `BookPageMedia`.
 - Opening phases: spine lifts (220 ms, cover preloads) → `cover` (380 ms) → `opening` hinge (620 ms) → `open`; `closing` 220 ms. Durations live in `OpenBook.tsx` and match the CSS in `styles.css`. Reduced motion skips straight to `open`.
 - Media: add items to `media` (`image`, `gif`, `video`, `video-link`, `dashboard`). Empty list = faint-cover "plates in preparation" page.

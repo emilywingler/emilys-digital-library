@@ -3,6 +3,8 @@ import type { Project } from "@/types/content";
 
 interface Props {
   project: Project;
+  /** Localized title drawn on the spine. */
+  title: string;
   label: string;
   lifted: boolean;
   onOpen: () => void;
@@ -11,10 +13,11 @@ interface Props {
 
 /**
  * One real book on the shelf: the uploaded spine artwork inside a button.
- * No text is drawn over the artwork — the title lives in the accessible name.
+ * The localized title is a separate text layer in the artwork's blank band;
+ * the printed name and ornaments are never covered.
  * Width comes from the artwork's 137:842 ratio, so it is never stretched.
  */
-export const BookSpine = forwardRef<HTMLButtonElement, Props>(({ project, label, lifted, onOpen, onPreload }, ref) => (
+export const BookSpine = forwardRef<HTMLButtonElement, Props>(({ project, title, label, lifted, onOpen, onPreload }, ref) => (
   <button
     ref={ref}
     type="button"
@@ -28,6 +31,9 @@ export const BookSpine = forwardRef<HTMLButtonElement, Props>(({ project, label,
     style={{ height: `calc(${project.spineHeight}rem * var(--spine-scale))` }}
   >
     <img src={project.spine} alt="" loading="lazy" decoding="async" draggable={false} className="h-full w-full object-fill" />
+    {/* Title layer over the empty band between the stars and the printed name.
+        aria-hidden: the button label already names the book. */}
+    <span aria-hidden="true" className="spine-title" data-spine-title>{title.replace(/-/g, "\u2011")}</span>
   </button>
 ));
 BookSpine.displayName = "BookSpine";
