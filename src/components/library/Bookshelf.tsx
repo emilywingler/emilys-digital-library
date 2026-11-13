@@ -34,7 +34,8 @@ export function Bookshelf({ projects, decor, locale, openLabel, liftedId, spineR
         const endAt = decorOnly ? slots.findIndex((s) => "decor" in s && s.decor.side === "end") : -1;
         return (
           <div key={n} className="shelf-row">
-            <ul className="flex flex-wrap items-end justify-center gap-x-1 px-2 sm:gap-x-1.5">
+            {/* Decor-only rows never wrap: extra filler books are simply clipped at the wall on narrow screens. */}
+            <ul className={`flex items-end gap-x-1 px-2 sm:gap-x-1.5 ${decorOnly ? "flex-nowrap justify-start overflow-hidden sm:justify-center" : "flex-wrap justify-center"}`}>
               {slots.flatMap((s, i) => [
                 ...(i === endAt ? [<li key="spacer" aria-hidden="true" className="flex-1" />] : []),
                 "project" in s ? (

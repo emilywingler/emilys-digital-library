@@ -109,10 +109,20 @@ export const shelfDecor: ShelfDecor[] = [
   // Leans outward, away from the project group, so it never covers a spine.
   { id: "d3", kind: "book", shelf: 1, order: 7, height: 14, width: 2.3, tone: 2, lean: true, label: "VII" },
   { id: "g1", kind: "globe", shelf: 1, order: 8 },
-  // Shelf 2: decoration gathered at the sides, open space in the middle.
-  { id: "p1", kind: "plant", shelf: 2, order: 0, side: "start" },
-  { id: "d4", kind: "book", shelf: 2, order: 1, height: 15.5, width: 1.8, tone: 4, label: "II", side: "start" },
-  { id: "d5", kind: "book", shelf: 2, order: 2, height: 13.5, width: 2.4, tone: 1, label: "IX", side: "start" },
-  { id: "d6", kind: "book", shelf: 2, order: 3, height: 16, width: 1.5, tone: 2, label: "III", side: "end" },
-  { id: "d7", kind: "book", shelf: 2, order: 4, height: 14.5, width: 2, tone: 3, label: "XI", side: "end" },
+  // Shelf 2: a full row of decorative books (no projects yet), plant at the left.
+  { id: "p1", kind: "plant", shelf: 2, order: 0 },
+  { id: "d4", kind: "book", shelf: 2, order: 1, height: 15.5, width: 1.8, tone: 4, label: "II" },
+  { id: "d5", kind: "book", shelf: 2, order: 2, height: 13.5, width: 2.4, tone: 1, label: "IX" },
+  { id: "d6", kind: "book", shelf: 2, order: 3, height: 16, width: 1.5, tone: 2, label: "III" },
+  { id: "d7", kind: "book", shelf: 2, order: 4, height: 14.5, width: 2, tone: 3, label: "XI" },
+  { id: "d8", kind: "book", shelf: 2, order: 5, height: 15, width: 1.7, tone: 1 },
+  { id: "d9", kind: "book", shelf: 2, order: 6, height: 16.5, width: 2.2, tone: 4, label: "V" },
+  { id: "d10", kind: "book", shelf: 2, order: 7, height: 13, width: 1.6, tone: 2 },
+  { id: "d11", kind: "book", shelf: 2, order: 8, height: 15.8, width: 1.9, tone: 3, label: "VIII" },
+  { id: "d12", kind: "book", shelf: 2, order: 9, height: 14.2, width: 2.3, tone: 1, label: "I" },
+  { id: "d13", kind: "book", shelf: 2, order: 10, height: 16.2, width: 1.5, tone: 4 },
+  { id: "d14", kind: "book", shelf: 2, order: 11, height: 14.8, width: 2, tone: 2, label: "X" },
+  { id: "d15", kind: "book", shelf: 2, order: 12, height: 15.4, width: 1.8, tone: 3 },
+  { id: "d16", kind: "book", shelf: 2, order: 13, height: 13.8, width: 2.1, tone: 1, label: "VI" },
+  { id: "d17", kind: "book", shelf: 2, order: 14, height: 16, width: 1.6, tone: 4, label: "XIV" },
 ];
