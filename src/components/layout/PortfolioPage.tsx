@@ -6,6 +6,8 @@ import { ExperienceFolder } from "@/components/experience/ExperienceFolder";
 import { skillCategories } from "@/content/skills";
 import { SkillsCatalog } from "@/components/skills/SkillsCatalog";
 import { SiteHeader } from "./SiteHeader";
+import { projects, shelfDecor } from "@/content/projects";
+import { ProjectLibrary } from "@/components/library/ProjectLibrary";
 import { SectionPlaceholder } from "./SectionPlaceholder";
 
 /**
@@ -24,7 +26,7 @@ export function PortfolioPage() {
         <HomeFrontPage profile={profile} links={contactLinks} />
         <ExperienceFolder entries={experience} />
         <SkillsCatalog categories={skillCategories} experience={experience} />
-        <SectionPlaceholder id="projects" />
+        <ProjectLibrary projects={projects} decor={shelfDecor} />
         <SectionPlaceholder id="contact" />
       </main>
     </>

@@ -26,3 +26,10 @@ Styled in `styles.css`: `html` + `.scrollbar-archive` only, fine pointers only. 
 
 ## Future Supabase
 Replace imports from `src/content` in `PortfolioPage` with a loader/query that returns the same types. Components stay unchanged.
+
+## Project Library
+- Data: `src/content/projects.ts` (`Project[]` + `ShelfDecor[]`). Shelf, order and `catalogNo` are explicit fields — never derived from array position.
+- Artwork: `src/assets/projects/<id>/{cover-pt,cover-en,spine}.svg.asset.json` (CDN pointers to the untouched uploads). Covers switch with the locale; spines are shared.
+- Components (`src/components/library/`): `ProjectLibrary` (open state + spine lift/preload) → `Bookshelf` → `BookSpine` / `DecorItem`; `OpenBook` (Radix Dialog) → `BookPageInfo` + `BookPageMedia`.
+- Opening phases: spine lifts (220 ms, cover preloads) → `cover` (380 ms) → `opening` hinge (620 ms) → `open`; `closing` 220 ms. Durations live in `OpenBook.tsx` and match the CSS in `styles.css`. Reduced motion skips straight to `open`.
+- Media: add items to `media` (`image`, `gif`, `video`, `video-link`, `dashboard`). Empty list = faint-cover "plates in preparation" page.

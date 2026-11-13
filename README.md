@@ -38,3 +38,6 @@ Dark Academia bilingual portfolio. See `docs/ARCHITECTURE.md` for structure and 
 
 ## Skills catalog
 Edit `src/content/skills.ts`. Leave `level` unset unless confirmed; `seeAlso` takes experience ids.
+
+## Project library
+Edit `src/content/projects.ts`. To replace artwork: `lovable-assets create --file new.svg --filename <id>-cover-pt.svg > src/assets/projects/<id>/cover-pt.svg.asset.json`. Add media to a project's `media` array; `contribution: null` shows a "to be confirmed" note.

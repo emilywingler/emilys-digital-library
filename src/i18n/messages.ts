@@ -27,6 +27,7 @@ const pt = {
   placeholder: { soon: "Capítulo em preparação" },
   experience: { title: "Experiência", kicker: "Arquivo", hint: "Selecione uma pasta", education: "Formação acadêmica", tabsLabel: "Pastas de experiência" },
   skills: { title: "Habilidades", kicker: "Catálogo", drawersLabel: "Gavetas do catálogo de habilidades", seeAlso: "Ver em", levels: { familiarity: "Familiaridade", developing: "Em desenvolvimento", practical: "Experiência prática" } },
+  projects: { title: "A Biblioteca de Projetos", kicker: "Estante", hint: "Escolha um livro para abri-lo.", open: "Abrir livro", close: "Fechar livro", tech: "Tecnologias", role: "Minha contribuição", rolePending: "A confirmar — descrição da minha contribuição", repo: "Ver no GitHub", newTab: "(abre em nova aba)", plateLabel: "Ilustração do projeto", plateEmpty: "Ilustrações em preparação" },
 };
 
 export type Messages = typeof pt;
@@ -56,6 +57,7 @@ const en: Messages = {
   placeholder: { soon: "Chapter in preparation" },
   experience: { title: "Experience", kicker: "Archive", hint: "Select a folder", education: "Academic education", tabsLabel: "Experience folders" },
   skills: { title: "Skills", kicker: "Catalog", drawersLabel: "Skills catalog drawers", seeAlso: "See", levels: { familiarity: "Familiarity", developing: "Developing", practical: "Practical experience" } },
+  projects: { title: "The Project Library", kicker: "Shelf", hint: "Pick a book to open it.", open: "Open book", close: "Close book", tech: "Technologies", role: "My contribution", rolePending: "To be confirmed — description of my contribution", repo: "View on GitHub", newTab: "(opens in a new tab)", plateLabel: "Project illustration", plateEmpty: "Plates in preparation" },
 };
 
 export const messages: Record<"pt" | "en", Messages> = { pt, en };
