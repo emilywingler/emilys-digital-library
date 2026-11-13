@@ -2,12 +2,13 @@
 
 Targeted refinement. Desktop book, artwork, project text, Home/Experience/Skills/Contact stay untouched.
 
-## 1. Bookshelf composition
-- Move all four project books onto the main (top) shelf, grouped side by side as the focal point, keeping their current heights and the uploaded spine artwork.
-- Second shelf: decorative (non-clickable) books only, placed mainly at the sides, with deliberate empty space — no extra fillers.
-- Globe and plant stay exactly as they are (artwork, scale, look).
-- Fix the green leaning decorative book: today it leans over the Pendulum spine and covers part of it. It moves so it never overlaps or blocks a project book.
-- The small green decorative spine will be placed following the bookshelf reference you are uploading — I will wait for that image and match its position and scale before building this part.
+## 1. Bookshelf composition (following your new reference)
+- All four project books stand together in the middle of the main shelf, side by side, as the clear focal point.
+- Plain, darker decorative books sit at the left and right ends, on the same shelf and on the other shelf level, with empty space left on purpose.
+- Decorative books get small, faint markings (thin gold bands, small numerals or a short word in muted gold) so they look lived-in. Project titles are larger and brighter so the four project books always stand out.
+- The green leaning book moves to the end of a group, resting against its neighbour like the leaning book on the right in your reference. It never covers a project spine again.
+- Globe and plant stay exactly as they are.
+- All decorative books stay non-clickable and are hidden from screen readers.
 
 ## 2. Spine titles
 - Each project title is written on its spine in IM FELL English SC, gold like your name, running vertically in the same direction as "Emily Wingler".
@@ -27,7 +28,8 @@ Targeted refinement. Desktop book, artwork, project text, Home/Experience/Skills
 - Tests updated: four project books on one shelf, decor non-interactive, spine title matches localized title, existing open/close/focus/reduced-motion tests still pass.
 
 ## Technical details
-- `src/content/projects.ts`: projects `shelf: 1`, reorder decor (data only).
+- `src/content/projects.ts`: projects `shelf: 1` grouped in consecutive order; decor reordered to the sides, with an optional faint `label` (data only).
+- `DecorItem.tsx`: renders the optional faint label and gold bands; lean now rests against the neighbour instead of overlapping.
 - `BookSpine.tsx`: add an absolutely positioned `writing-mode: vertical-rl` text layer within a measured title band (percent offsets of the 137:842 artwork); optional `spineWidth` override in `Project` type used only when needed.
 - `styles.css`: spine-title utility; decor lean origin adjusted.
 - `OpenBook.tsx` / `ProjectLibrary.tsx`: only touched if the mobile cover bug reproduces.
