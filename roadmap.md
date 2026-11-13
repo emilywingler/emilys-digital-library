@@ -9,3 +9,7 @@
 - [x] Stop the green leaning book from covering a project spine.
 - [x] Write localized titles on spines in IM Fell English SC, clear of the printed name.
 - [x] Re-check cover reveal with real touch taps at 1440/1024/768/390/360 in PT and EN.
+
+# Comment: responsive shelf decoration
+
+- [x] Suppress decorations progressively when they compete with project books; verify narrow and wide shelves in both languages.

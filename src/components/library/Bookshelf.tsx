@@ -35,7 +35,7 @@ export function Bookshelf({ projects, decor, locale, openLabel, liftedId, spineR
         return (
           <div key={n} className="shelf-row">
             {/* Decor-only rows never wrap: extra filler books are simply clipped at the wall on narrow screens. */}
-            <ul className={`flex items-end gap-x-1 px-2 sm:gap-x-1.5 ${decorOnly ? "flex-nowrap justify-start overflow-hidden sm:justify-center" : "flex-wrap justify-center"}`}>
+            <ul className={`flex items-end gap-x-1 px-2 sm:gap-x-1.5 ${decorOnly ? "flex-nowrap justify-start overflow-hidden sm:justify-center" : "shelf-projects flex-nowrap justify-center"}`}>
               {slots.flatMap((s, i) => [
                 ...(i === endAt ? [<li key="spacer" aria-hidden="true" className="flex-1" />] : []),
                 "project" in s ? (
@@ -51,7 +51,7 @@ export function Bookshelf({ projects, decor, locale, openLabel, liftedId, spineR
                     />
                   </li>
                 ) : (
-                  <li key={s.decor.id} aria-hidden="true" className="flex">
+                  <li key={s.decor.id} aria-hidden="true" className={`flex ${s.decor.kind === "book" ? "shelf-decor-book" : "shelf-decor-object"}`}>
                     <DecorItem item={s.decor} />
                   </li>
                 ),

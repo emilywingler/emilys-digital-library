@@ -280,6 +280,8 @@
 @theme inline { --color-wood: var(--wood); }
 
 @utility bookshelf-cabinet {
+  container-type: inline-size;
+  container-name: bookshelf;
   background:
     linear-gradient(90deg, var(--wood-dark) 0 0.9rem, transparent 0.9rem calc(100% - 0.9rem), var(--wood-dark) calc(100% - 0.9rem)),
     radial-gradient(ellipse at 50% 0%, oklch(0.74 0.085 82 / 10%), transparent 70%),
@@ -289,6 +291,15 @@
   border-radius: 3px;
 }
 @utility shelf-row { padding-top: 1.25rem; }
+/* Use the cabinet's available space, not device labels. Remove objects first,
+   then filler spines, before either can force a project off the main shelf.
+   Decor-only shelves retain their existing clipped composition. */
+@container bookshelf (width < 360px) {
+  .shelf-projects > .shelf-decor-object { display: none; }
+}
+@container bookshelf (width < 300px) {
+  .shelf-projects > .shelf-decor-book { display: none; }
+}
 @utility shelf-board {
   height: 0.9rem;
   margin: 0 -0.25rem;
