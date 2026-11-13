@@ -16,7 +16,7 @@ export function StarCursor() {
   const tRef = useRef(t.cursor);
   tRef.current = t.cursor;
   const [enabled, setEnabled] = useState(false);
-  const [state, setState] = useState<{ visible: boolean; interactive: boolean; label?: string }>({ visible: false, interactive: false });
+  const [state, setState] = useState<{ visible: boolean; interactive: boolean; label?: string | undefined }>({ visible: false, interactive: false });
   const node = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export function StarCursor() {
     const onMove = (e: PointerEvent) => {
       if (e.pointerType !== "mouse") return;
       x = e.clientX; y = e.clientY;
-      if (reduce || !node.current?.dataset.visible) { cx = x; cy = y; if (node.current) node.current.style.transform = `translate3d(${x}px, ${y}px, 0)`; }
+      if (reduce || !node.current?.dataset["visible"]) { cx = x; cy = y; if (node.current) node.current.style.transform = `translate3d(${x}px, ${y}px, 0)`; }
       else if (!raf) raf = requestAnimationFrame(tick);
       const r = resolveCursor(e.target as Element, tRef.current);
       setState((s) => (s.visible && s.interactive === r.interactive && s.label === r.label ? s : { visible: true, ...r }));

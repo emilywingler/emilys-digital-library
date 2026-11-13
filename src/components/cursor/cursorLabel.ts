@@ -8,7 +8,7 @@ export const INTERACTIVE = 'a[href], button:not(:disabled), [role="tab"], summar
  * actual control (its role/state), never from decoration. Returns
  * `{ interactive: false }` for anything that is not a real control.
  */
-export function resolveCursor(target: Element | null, t: Messages["cursor"]): { interactive: boolean; label?: string } {
+export function resolveCursor(target: Element | null, t: Messages["cursor"]): { interactive: boolean; label?: string | undefined } {
   const el = target?.closest(INTERACTIVE);
   if (!el || el.closest("[aria-hidden='true']") || el.getAttribute("aria-disabled") === "true") return { interactive: false };
   const label = labelFor(el, t);
