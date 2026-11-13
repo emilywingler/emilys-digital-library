@@ -544,6 +544,11 @@ a.journal-cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 3p
 @keyframes m8-slide { from { opacity: 0; transform: translateX(-10px); } }
 @keyframes m8-turn { from { opacity: 0; transform: translateX(6px) rotateY(-4deg); } }
 @keyframes m8-sway { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(5deg); } 60% { transform: rotate(-3deg); } 80% { transform: rotate(1deg); } }
+@keyframes tassel-gentle-sway {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(4deg); }
+  75% { transform: rotate(-4deg); }
+}
 
 /* Section entrances (see useRevealOnce). Visible by default; only "pending" hides. */
 [data-reveal="pending"] { opacity: 0; transform: translateY(calc(var(--reveal-rise) * 2)); }
@@ -588,10 +593,10 @@ a.journal-cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 3p
 .book-spine { transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, filter var(--motion-base); }
 .plate-frame { animation: m8-turn var(--motion-base) var(--ease-paper) both; }
 
-/* Contact: the tassel sways once when the bookmark first appears. */
+/* Contact: three gentle swings on first arrival, then rests. */
 [data-reveal="shown"].bookmark-cord-reveal { opacity: 1; transform: none; transition: none; }
 .bookmark-cord-reveal[data-reveal="pending"] { opacity: 1; transform: none; }
-[data-reveal="shown"] .tassel-sway { animation: m8-sway 1.8s var(--ease-out-soft) 0.2s 1 both; }
+[data-reveal="shown"] .tassel-sway { animation: tassel-gentle-sway 3s ease-in-out 0.2s 3 both; }
 
 /* Contextual star cursor (fine pointers only; mounted by StarCursor). */
 .star-cursor { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; opacity: 0;
