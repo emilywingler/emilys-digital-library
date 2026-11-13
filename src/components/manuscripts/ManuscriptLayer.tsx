@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import * as D from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { manuscriptExtras, manuscripts } from "@/content/manuscripts";
@@ -18,7 +19,9 @@ function focusStable(id: string) {
 
 /** Page-level note dialog, collection indicator + overview, and the final letter. */
 export function ManuscriptLayer() {
-  const { ready, found, dialog, setDialog } = useManuscripts();
+  const { ready, found, dialog, setDialog, replayed, restart } = useManuscripts();
+  const [confirming, setConfirming] = useState(false);
+  useEffect(() => { if (confirming) document.querySelector<HTMLElement>(".ms-confirm [data-cancel]")?.focus(); }, [confirming]);
   const { locale, t } = useLocale();
   const tm = t.manuscripts;
   const note = dialog?.kind === "note" ? manuscripts.find((m) => m.id === dialog.id) : undefined;
@@ -33,13 +36,13 @@ export function ManuscriptLayer() {
 
   return (
     <>
-      {ready && count > 0 && (
+      {ready && (count > 0 || replayed) && (
         <button type="button" className="ms-counter paper" onClick={() => setDialog({ kind: "collection" })}
           aria-label={tm.openCollection.replace("{n}", pad(count))} id="ms-counter">
           <ManuscriptGlyph variant="seal" className="h-4 w-4 shrink-0 text-gold" />
           <span className="flex min-w-0 flex-col text-left">
             <span className="font-masthead text-[0.65rem] uppercase tracking-[0.2em] text-paper-muted">{tm.title} · <span className="whitespace-nowrap tabular-nums">{pad(count)}/07</span></span>
-            <span className="ms-counter-line font-display text-sm italic leading-tight">{tm.lines[count - 1]}</span>
+            <span className="ms-counter-line font-display text-sm italic leading-tight">{count > 0 ? tm.lines[count - 1] : tm.title}</span>
           </span>
         </button>
       )}
@@ -58,7 +61,7 @@ export function ManuscriptLayer() {
         </D.Portal>
       </D.Root>
 
-      <D.Root open={dialog?.kind === "collection"} onOpenChange={(o) => { if (!o) close("ms-counter"); }}>
+      <D.Root open={dialog?.kind === "collection"} onOpenChange={(o) => { if (!o) { setConfirming(false); close("ms-counter"); } }}>
         <D.Portal>
           <D.Overlay className="ms-overlay" />
           <D.Content className="ms-panel paper" aria-describedby="ms-progress" onCloseAutoFocus={(e) => e.preventDefault()}>
@@ -78,8 +81,26 @@ export function ManuscriptLayer() {
                 );
               })}
             </ol>
-            {complete && (
-              <button type="button" className="mt-4 font-display italic underline decoration-gold underline-offset-4" onClick={() => setDialog({ kind: "letter" })}>{tm.reread}</button>
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+              {complete && (
+                <button type="button" className="min-h-11 font-display italic underline decoration-gold underline-offset-4" onClick={() => setDialog({ kind: "letter" })}>{tm.reread}</button>
+              )}
+              {count > 0 && !confirming && (
+                <button type="button" className="ms-replay min-h-11 font-masthead text-xs uppercase tracking-[0.18em] text-paper-muted hover:text-paper-foreground" onClick={() => setConfirming(true)}>
+                  {complete ? tm.playAgain : tm.restart}
+                </button>
+              )}
+            </div>
+            {confirming && (
+              <div role="alertdialog" aria-modal="false" aria-labelledby="ms-confirm-title" aria-describedby="ms-confirm-body" className="ms-confirm mt-3 border border-gold/60 p-4">
+                <p id="ms-confirm-title" className="font-display text-lg italic">{tm.confirmTitle}</p>
+                <p id="ms-confirm-body" className="mt-1 text-sm leading-relaxed">{tm.confirmBody}</p>
+                <div className="mt-3 flex justify-end gap-4">
+                  <button type="button" data-cancel className="min-h-11 px-2 text-sm italic underline underline-offset-4" onClick={() => setConfirming(false)}>{tm.cancel}</button>
+                  <button type="button" className="min-h-11 border border-gold px-3 font-masthead text-xs uppercase tracking-[0.18em]"
+                    onClick={() => { setConfirming(false); restart(); setTimeout(() => focusStable("ms-counter"), 0); }}>{tm.confirm}</button>
+                </div>
+              </div>
             )}
             <D.Close aria-label={tm.closeCollection} className="ms-close"><X className="h-4 w-4" aria-hidden="true" /></D.Close>
           </D.Content>

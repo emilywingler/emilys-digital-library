@@ -41,3 +41,20 @@ export function pickPlacements(list: readonly Manuscript[], found: ReadonlySet<s
   }
   return out;
 }
+
+/**
+ * Fresh arrangement for a replay: draws new placements and, if every manuscript
+ * landed on its previous anchor, moves the first one that has a free alternative.
+ */
+export function pickReplayPlacements(list: readonly Manuscript[], rng: () => number, previous: Placements): Placements {
+  const differs = (p: Placements) => list.some((m) => p[m.id] && previous[m.id] && p[m.id] !== previous[m.id]);
+  let next = pickPlacements(list, new Set(), rng);
+  for (let i = 0; i < 8 && !differs(next); i++) next = pickPlacements(list, new Set(), rng);
+  if (differs(next)) return next;
+  const used = new Set(Object.values(next));
+  for (const m of list) {
+    const alt = m.anchors.find((a) => a !== next[m.id] && !used.has(a));
+    if (alt && previous[m.id]) return { ...next, [m.id]: alt };
+  }
+  return next; // no valid alternative exists
+}

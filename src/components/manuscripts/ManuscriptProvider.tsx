@@ -4,7 +4,7 @@ import {
   PROGRESS_KEY, SESSION_KEY, parsePlacements, parseProgress, safeStore, serializePlacements, serializeProgress,
   type Placements,
 } from "./manuscriptStorage";
-import { pickPlacements } from "./placement";
+import { pickPlacements, pickReplayPlacements } from "./placement";
 import { ManuscriptLayer } from "./ManuscriptLayer";
 
 const IDS = manuscripts.map((m) => m.id);
@@ -25,9 +25,13 @@ interface Ctx {
   discover: (id: string) => boolean;
   /** Opens the letter as soon as no project book dialog is open. */
   queueLetter: () => void;
+  /** True once the visitor restarted in this page session (counter shows 00/07). */
+  replayed: boolean;
+  /** Clears progress, draws a new arrangement and closes any panel. */
+  restart: () => void;
 }
 
-const INERT: Ctx = { ready: false, found: new Set(), placements: {}, dialog: null, setDialog: () => {}, discover: () => false, queueLetter: () => {} };
+const INERT: Ctx = { ready: false, found: new Set(), placements: {}, dialog: null, setDialog: () => {}, discover: () => false, queueLetter: () => {}, replayed: false, restart: () => {} };
 
 const ManuscriptContext = createContext<Ctx | null>(null);
 
@@ -44,8 +48,11 @@ export function ManuscriptProvider({ children }: { children: ReactNode }) {
   const [placements, setPlacements] = useState<Placements>({});
   const [dialog, setDialog] = useState<Dialog>(null);
   const [letterQueued, setLetterQueued] = useState(false);
+  const [replayed, setReplayed] = useState(false);
   const foundRef = useRef(found);
   foundRef.current = found;
+  const placementsRef = useRef<Placements>({});
+  placementsRef.current = placements;
 
   useEffect(() => {
     const progress = parseProgress(local.read(PROGRESS_KEY), IDS);
@@ -69,6 +76,16 @@ export function ManuscriptProvider({ children }: { children: ReactNode }) {
     return done;
   }, [completedAt]);
 
+  const restart = useCallback(() => {
+    const next = pickReplayPlacements(manuscripts, Math.random, placementsRef.current);
+    const empty = new Set<string>();
+    foundRef.current = empty;
+    setFound(empty); setCompletedAt(undefined); setPlacements(next);
+    setLetterQueued(false); setReplayed(true); setDialog(null);
+    local.write(PROGRESS_KEY, serializeProgress({ found: [] }));
+    session.write(SESSION_KEY, serializePlacements(next));
+  }, []);
+
   const queueLetter = useCallback(() => setLetterQueued(true), []);
   useEffect(() => {
     if (!letterQueued) return;
@@ -78,7 +95,7 @@ export function ManuscriptProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(t);
   }, [letterQueued]);
 
-  const value = useMemo(() => ({ ready, found, placements, dialog, setDialog, discover, queueLetter }), [ready, found, placements, dialog, discover, queueLetter]);
+  const value = useMemo(() => ({ ready, found, placements, dialog, setDialog, discover, queueLetter, replayed, restart }), [ready, found, placements, dialog, discover, queueLetter, replayed, restart]);
   return (
     <ManuscriptContext.Provider value={value}>
       {children}

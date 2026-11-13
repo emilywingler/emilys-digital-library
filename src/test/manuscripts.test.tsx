@@ -84,3 +84,66 @@ describe("provider flow", () => {
     expect(screen.getByText("To the one who made it this far.")).toBeInTheDocument();
   });
 });
+
+describe("replay", () => {
+  beforeEach(() => { localStorage.clear(); sessionStorage.clear(); });
+  it("replay arrangement always differs when an alternative exists", async () => {
+    const { pickReplayPlacements } = await import("@/components/manuscripts/placement");
+    for (let seed = 1; seed < 60; seed++) {
+      const prev = pickPlacements(manuscripts, new Set(), seeded(seed));
+      const next = pickReplayPlacements(manuscripts, () => 0, prev); // worst case: rng repeats
+      expect(manuscripts.some((m) => next[m.id] !== prev[m.id])).toBe(true);
+      expect(Object.keys(next)).toHaveLength(7);
+      expect(new Set(Object.values(next)).size).toBe(7);
+    }
+  });
+
+  async function setup(found: string[]) {
+    const { ManuscriptProvider } = await import("@/components/manuscripts/ManuscriptProvider");
+    const { ManuscriptSpot } = await import("@/components/manuscripts/ManuscriptMarker");
+    localStorage.setItem(PROGRESS_KEY, serializeProgress(found.length === 7 ? { found, completedAt: "x" } : { found }));
+    render(<ManuscriptProvider><div className="relative"><ManuscriptSpot section="home" /></div></ManuscriptProvider>);
+  }
+  const restartVia = (label: RegExp) => {
+    fireEvent.click(screen.getByRole("button", { name: /Open manuscript collection/ }));
+    fireEvent.click(screen.getByRole("button", { name: label }));
+    expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Start again" }));
+  };
+
+  it("restarts a completed exploration and allows completing a second one", async () => {
+    await setup(IDS);
+    const before = sessionStorage.getItem("wingler:lost-manuscripts:session");
+    restartVia(/Play Again/);
+    expect(JSON.parse(localStorage.getItem(PROGRESS_KEY)!)).toEqual({ version: 1, found: [] });
+    expect(sessionStorage.getItem("wingler:lost-manuscripts:session")).not.toBe(before);
+    expect(screen.getByRole("button", { name: /00 of 07 found/ })).toBeInTheDocument();
+    expect(screen.queryByText("To the one who made it this far.")).toBeNull();
+    // second exploration: seed the other six, then find Nº 01 on the page
+    expect(screen.getByRole("button", { name: "Lost manuscript No. 01" })).toBeInTheDocument();
+  });
+
+  it("restarts an incomplete exploration and cancel keeps progress", async () => {
+    await setup(["journey", "beginning"]);
+    fireEvent.click(screen.getByRole("button", { name: /02 of 07 found/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Restart Exploration/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(JSON.parse(localStorage.getItem(PROGRESS_KEY)!).found).toHaveLength(2);
+    fireEvent.click(screen.getByRole("button", { name: /Restart Exploration/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Start again" }));
+    expect(JSON.parse(localStorage.getItem(PROGRESS_KEY)!).found).toEqual([]);
+    expect(screen.getByRole("button", { name: /00 of 07 found/ })).toBeInTheDocument();
+  });
+
+  it("second exploration completes and shows the letter again", async () => {
+    await setup(IDS);
+    restartVia(/Play Again/);
+    // simulate finding the other six in the new exploration by rendering fresh with stored progress
+    localStorage.setItem(PROGRESS_KEY, serializeProgress({ found: IDS.filter((id) => id !== "small-pause") }));
+    document.body.innerHTML = "";
+    await setup(IDS.filter((id) => id !== "small-pause"));
+    fireEvent.click(screen.getByRole("button", { name: "Lost manuscript No. 01" }));
+    await act(() => new Promise((r) => setTimeout(r, 350)));
+    expect(screen.getByText("To the one who made it this far.")).toBeInTheDocument();
+  });
+});
