@@ -40,3 +40,4 @@ use the editor.
 - Opened books use one shared scroll surface: readable two-page spreads at 960px+, a bound single leaf below 960px, and mobile spacing below 600px — prevents compressed text and nested scrolling without duplicating content.
 - Project-bearing shelves suppress decorative objects, then filler books with cabinet container queries — project books stay together while roomy and decor-only shelves preserve their composition.
 - Contact lives only in `src/components/contact/ContactBookmark.tsx` (also the page footer), reading `src/content/links.ts`; the Home shows the portrait from `profile.portrait` — keeps contact data in one place.
+- Journal CTA state is derived only from `status` + `isSafeExternalUrl` in `src/components/journal/JournalCta.tsx` — prevents broken or premature Medium links.

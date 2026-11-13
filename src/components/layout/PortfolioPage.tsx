@@ -8,6 +8,8 @@ import { SkillsCatalog } from "@/components/skills/SkillsCatalog";
 import { SiteHeader } from "./SiteHeader";
 import { projects, shelfDecor } from "@/content/projects";
 import { ProjectLibrary } from "@/components/library/ProjectLibrary";
+import { journalArticles } from "@/content/journal";
+import { WinglerJournal } from "@/components/journal/WinglerJournal";
 import { ContactBookmark } from "@/components/contact/ContactBookmark";
 
 /**
@@ -27,6 +29,7 @@ export function PortfolioPage() {
         <ExperienceFolder entries={experience} />
         <SkillsCatalog categories={skillCategories} experience={experience} />
         <ProjectLibrary projects={projects} decor={shelfDecor} />
+        <WinglerJournal articles={journalArticles} />
         <ContactBookmark links={contactLinks} />
       </main>
     </>

@@ -40,3 +40,9 @@ Replace imports from `src/content` in `PortfolioPage` with a loader/query that r
 ## Contact & portrait (Milestone 5)
 - `ContactBookmark` is the final section and footer; links come from `content/links.ts`.
 - The Home portrait is `profile.portrait` (asset pointer in `src/assets/profile/`), framed by `NewspaperPortrait`.
+
+## The Wingler Journal (Milestone 7)
+- Data: `src/content/journal.ts` (`JournalArticle[]`), covers as `.asset.json` pointers in `src/assets/journal/<id>/`. Title/excerpt stay in the article's own `lang`; never auto-translated.
+- Components (`src/components/journal/`): `WinglerJournal` → `JournalEntry` → `JournalCta`.
+- CTA rule: `in-progress` → native disabled button (any URL ignored); `published` + https URL → new-tab link with `rel="noopener noreferrer"`; `published` without valid URL → no action.
+- Future DB: one `journal_articles` row per entry with the same flat fields.

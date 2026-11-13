@@ -135,3 +135,25 @@ export interface ShelfDecor {
   /** Shelves without projects: which wall the item gathers against. */
   side?: "start" | "end";
 }
+
+/** Editorial state of a journal article; it alone decides whether the CTA can open. */
+export type JournalStatus = "in-progress" | "published";
+
+/**
+ * One entry in The Wingler Journal. Title/excerpt stay in the article's own
+ * language (`lang`) and are never auto-translated. Flat fields map 1:1 to a
+ * future `journal_articles` row (cover_src, cover_alt, published_at…).
+ */
+export interface JournalArticle {
+  id: string;
+  title: string;
+  excerpt: string;
+  lang: "pt-BR" | "en";
+  cover: { src: string; alt: string; width: number; height: number };
+  /** ISO date (YYYY-MM-DD). */
+  publishedAt?: string;
+  readingMinutes?: number;
+  status: JournalStatus;
+  /** Only honoured when `status === "published"` and it is an https URL. */
+  url?: string | undefined;
+}

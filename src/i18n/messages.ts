@@ -10,7 +10,7 @@ const pt = {
   nav: {
     label: "Navegação principal",
     home: "Início", experience: "Experiência",
-    skills: "Habilidades", projects: "Projetos", contact: "Contato",
+    skills: "Habilidades", projects: "Projetos", journal: "Diário", contact: "Contato",
     openMenu: "Abrir menu", closeMenu: "Fechar menu",
   },
   language: { label: "Idioma", switchTo: "Ver em inglês" },
@@ -23,6 +23,7 @@ const pt = {
     portraitLabel: "Retrato de arquivo",
     explore: "Explorar a biblioteca",
   },
+  journal: { kicker: "Periódico", lead: "Ensaios e relatos do arquivo", inProgress: "Em desenvolvimento", read: "Ler no Medium", newTab: "(abre em nova aba)", unavailable: "Ainda não publicado", language: "Idioma", minutes: "{n} min de leitura", published: "Publicado em" },
   contact: { title: "Vamos manter contato.", lead: "Para conversas, oportunidades ou indicações de leitura.", linksLabel: "Formas de contato", newTab: "(abre em nova aba)" },
   experience: { title: "Experiência", kicker: "Arquivo", hint: "Selecione uma pasta", education: "Formação acadêmica", tabsLabel: "Pastas de experiência" },
   skills: { title: "Habilidades", kicker: "Catálogo", drawersLabel: "Gavetas do catálogo de habilidades", seeAlso: "Ver em", levels: { familiarity: "Familiaridade", developing: "Em desenvolvimento", practical: "Experiência prática" } },
@@ -39,7 +40,7 @@ const en: Messages = {
   nav: {
     label: "Main navigation",
     home: "Home", experience: "Experience",
-    skills: "Skills", projects: "Projects", contact: "Contact",
+    skills: "Skills", projects: "Projects", journal: "Journal", contact: "Contact",
     openMenu: "Open menu", closeMenu: "Close menu",
   },
   language: { label: "Language", switchTo: "View in Portuguese" },
@@ -52,6 +53,7 @@ const en: Messages = {
     portraitLabel: "Archival portrait",
     explore: "Explore the library",
   },
+  journal: { kicker: "Periodical", lead: "Essays and accounts from the archive", inProgress: "In progress", read: "Read on Medium", newTab: "(opens in a new tab)", unavailable: "Not published yet", language: "Language", minutes: "{n} min read", published: "Published on" },
   contact: { title: "Let's keep in touch.", lead: "For conversations, opportunities or reading suggestions.", linksLabel: "Ways to reach me", newTab: "(opens in a new tab)" },
   experience: { title: "Experience", kicker: "Archive", hint: "Select a folder", education: "Academic education", tabsLabel: "Experience folders" },
   skills: { title: "Skills", kicker: "Catalog", drawersLabel: "Skills catalog drawers", seeAlso: "See", levels: { familiarity: "Familiarity", developing: "Developing", practical: "Practical experience" } },

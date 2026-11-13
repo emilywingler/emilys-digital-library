@@ -3,6 +3,7 @@
 A new section between the Project Library and the Contact Bookmark, styled as a small literary journal ("periodical index"). No other section is changed.
 
 ## What you will see
+
 - Masthead in the existing newspaper style: "The Wingler Journal" with a kicker ("Periódico" / "Periodical") and a thin gold rule.
 - Each article is an "entry" in the journal: the cover framed like a tipped-in plate (16:9, matching your banner), then title, language tag as text ("PT-BR" / "EN"), optional date and reading time, and the excerpt.
 - In-progress articles get a small rotated archival stamp: "Em desenvolvimento" / "In progress" (text + border, not color alone).
@@ -11,15 +12,27 @@ A new section between the Project Library and the Contact Bookmark, styled as a 
 - Header menu gains "Journal" / "Diário"; hover lifts the plate slightly; reduced motion disables it.
 
 ## First entry (in progress, no Medium URL)
+
 - Cover: your uploaded SheBuilds banner, stored as an asset, unaltered.
 - Language: PT-BR. Title and description kept in Portuguese only (not auto-translated).
 - Title: the banner reads "SheBuilds — Como foi participar?". I will use this only as a clearly marked pending field unless you confirm it is the real title.
 - Description: I will draft one neutral sentence (about taking part in SheBuilds and building this portfolio, "em escrita") for you to approve; marked for review.
 
 ## Technical details
+
 - Types in `src/types/content.ts`: `JournalArticle { id, title, excerpt, lang: "pt-BR" | "en", cover: { src, alt }, publishedAt?, readingMinutes?, status: "in-progress" | "published", url? }` — flat, maps to future table columns.
 - Data `src/content/journal.ts`; asset pointer `src/assets/journal/shebuilds/cover.png.asset.json`.
 - Components `src/components/journal/{WinglerJournal,JournalEntry,JournalCta}.tsx`; `JournalCta` decides from status + `isSafeExternalUrl` (https only).
 - `sections.ts` adds "journal"; `messages.ts` adds PT/EN strings; styles/stamp tokens in `styles.css`; `PortfolioPage` inserts the section.
 - Tests `src/test/journal.test.tsx`: in-progress disabled button, can't be activated/no anchor, published with URL → `target=_blank rel="noopener noreferrer"`, published without/invalid URL → no action, PT/EN labels, heading/landmark semantics.
-- Browser check PT/EN at 1440, 1024, 768, 390, 360 for overflow. Update `docs/ARCHITECTURE.md` and `AGENTS.md`.
+- Browser check PT/EN at 1440, 1024, 768, 390, 360 for overflow. Update `docs/ARCHITECTURE.md` and `AGENTS.md`.  
+  
+Small content update for Milestone 7:
+  I already have the actual title and excerpt for the first SheBuilds article. Please use these exact texts in the initial journal entry instead of placeholder or AI-generated copy.
+  **Title (PT-BR):**  
+  "Como foi a experiência de participar do SheBuilds: Learning Edition da Lovable?"
+  **Excerpt (PT-BR):**  
+  "Da inscrição ao produto final: um relato honesto sobre como foi participar do SheBuilds, tudo que eu aprendi, e por que você deveria participar também se tiver a chance!"
+  Keep the article status as `in-progress`, since the article is still being written.
+  Use the uploaded SheBuilds banner as the cover, preserving it unaltered. Do not add a Medium URL yet. Keep the "Ler no Medium" button visible but disabled until the article is published.
+  The title and excerpt are final content provided by me, not provisional suggestions. Do not rewrite or automatically translate them.
