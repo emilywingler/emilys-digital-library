@@ -450,12 +450,27 @@
   filter: sepia(0.28) contrast(0.96) saturate(0.85);
 }
 
+/* Cord and hole share one attachment point. Placement/rotation live outside
+   the animated SVG so its sway never overwrites the physical connection. */
+.bookmark-wrap { --cord-x: 2.05rem; --cord-y: 1.35rem; }
+.bookmark-cord-anchor {
+  position: absolute; left: var(--cord-x); top: var(--cord-y);
+  width: 0; height: 0; z-index: 10; pointer-events: none;
+}
+.bookmark-cord-reveal { position: absolute; left: -1.125rem; top: -0.1125rem; width: 2.25rem; height: 6.75rem; }
+.bookmark-cord-reveal .tassel-sway { display: block; width: 100%; height: 100%; transform-origin: 50% 1.666667%; }
+@media (min-width: 48rem) {
+  .bookmark-wrap { --cord-x: 1.35rem; --cord-y: 50%; }
+}
+@media (min-width: 80rem) {
+  .bookmark-cord-anchor { transform: rotate(90deg); }
+}
+
 /* Contact bookmark punch hole where the cord passes through. */
 @utility bookmark-hole {
   position: absolute; width: 0.7rem; height: 0.7rem; border-radius: 9999px;
   background: var(--background); box-shadow: inset 0 1px 2px oklch(0 0 0 / 45%);
-  left: 2.05rem; top: 1rem; transform: translateX(-50%);
-  @media (min-width: 48rem) { left: 1rem; top: 50%; transform: translateY(-50%); }
+  left: var(--cord-x); top: var(--cord-y); transform: translate(-50%, -50%);
 }
 
 /* ---------- The Wingler Journal ---------- */
@@ -574,7 +589,9 @@ a.journal-cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 3p
 .plate-frame { animation: m8-turn var(--motion-base) var(--ease-paper) both; }
 
 /* Contact: the tassel sways once when the bookmark first appears. */
-[data-reveal="shown"] .tassel-sway { transform-origin: top center; animation: m8-sway 1.1s var(--ease-out-soft) 0.2s 1 both; }
+[data-reveal="shown"].bookmark-cord-reveal { opacity: 1; transform: none; transition: none; }
+.bookmark-cord-reveal[data-reveal="pending"] { opacity: 1; transform: none; }
+[data-reveal="shown"] .tassel-sway { animation: m8-sway 1.8s var(--ease-out-soft) 0.2s 1 both; }
 
 /* Contextual star cursor (fine pointers only; mounted by StarCursor). */
 .star-cursor { position: fixed; left: 0; top: 0; z-index: 100; pointer-events: none; opacity: 0;

@@ -22,3 +22,7 @@
 - [x] Ornate arrow everywhere an arrow appears (Home, plates, Journal).
 - [x] Journal carousel with SheBuilds + upcoming placeholder.
 - [x] Physical book closing (fold, return to spine).
+
+# Comment 3af02d34 — bookmark tassel
+
+- [x] Connect the desktop cord to the hole, keep it visible on tablets, and verify its one-time mobile sway in PT/EN (1791, 1024, 768, 390, 360; reduced motion remains static).

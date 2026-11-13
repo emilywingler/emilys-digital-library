@@ -15,8 +15,12 @@ export function ContactBookmark({ links }: { links: ContactLink[] }) {
   const { t } = useLocale();
   return (
     <footer data-section="contact" id="contact" aria-labelledby="contact-title" className="px-4 pb-14 pt-10 sm:px-6">
-      <div className="bookmark-wrap relative mx-auto max-w-sm md:max-w-4xl" data-reveal>
-        <Tassel className="tassel-sway pointer-events-none absolute -top-6 left-5 z-10 h-28 w-9 text-gold md:-left-12 md:top-1/2 md:-translate-y-1/2 md:rotate-90" />
+      <div className="bookmark-wrap relative mx-auto max-w-sm md:max-w-4xl">
+        <span className="bookmark-cord-anchor" aria-hidden="true">
+          <span className="bookmark-cord-reveal" data-reveal>
+            <Tassel className="tassel-sway text-gold" />
+          </span>
+        </span>
         <div className="bookmark paper relative rounded-t-[1.5rem] px-6 pb-6 pt-12 md:rounded-l-[1.5rem] md:rounded-tr-none md:px-12 md:py-8">
           <span className="bookmark-hole" aria-hidden="true" />
           <div className="pointer-events-none absolute inset-2 rounded-t-[1.1rem] border border-gold/60 md:rounded-l-[1.1rem] md:rounded-tr-none" aria-hidden="true" />
