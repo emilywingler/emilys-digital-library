@@ -39,3 +39,4 @@ use the editor.
 - Project Library: books are data in `src/content/projects.ts` with artwork as `.asset.json` pointers per project; `OpenBook` wraps Radix Dialog and runs a CSS phase sequence (timings exported from the component) — keeps artwork untouched and modal a11y native.
 - Opened books use one shared scroll surface: readable two-page spreads at 960px+, a bound single leaf below 960px, and mobile spacing below 600px — prevents compressed text and nested scrolling without duplicating content.
 - Project-bearing shelves suppress decorative objects, then filler books with cabinet container queries — project books stay together while roomy and decor-only shelves preserve their composition.
+- Contact lives only in `src/components/contact/ContactBookmark.tsx` (also the page footer), reading `src/content/links.ts`; the Home shows the portrait from `profile.portrait` — keeps contact data in one place.

@@ -8,7 +8,7 @@ import { SkillsCatalog } from "@/components/skills/SkillsCatalog";
 import { SiteHeader } from "./SiteHeader";
 import { projects, shelfDecor } from "@/content/projects";
 import { ProjectLibrary } from "@/components/library/ProjectLibrary";
-import { SectionPlaceholder } from "./SectionPlaceholder";
+import { ContactBookmark } from "@/components/contact/ContactBookmark";
 
 /**
  * The whole one-page portfolio, shared by `/` (pt) and `/en` (en). The routes
@@ -23,11 +23,11 @@ export function PortfolioPage() {
       </a>
       <SiteHeader />
       <main id="main">
-        <HomeFrontPage profile={profile} links={contactLinks} />
+        <HomeFrontPage profile={profile} />
         <ExperienceFolder entries={experience} />
         <SkillsCatalog categories={skillCategories} experience={experience} />
         <ProjectLibrary projects={projects} decor={shelfDecor} />
-        <SectionPlaceholder id="contact" />
+        <ContactBookmark links={contactLinks} />
       </main>
     </>
   );

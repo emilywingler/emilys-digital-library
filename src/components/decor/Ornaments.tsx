@@ -45,3 +45,18 @@ export function TwinStars({ className }: Props) {
     </svg>
   );
 }
+
+/** Small laurel sprig, as on the bookmark reference. */
+export function Sprig({ className }: Props) {
+  return (
+    <svg viewBox="0 0 80 20" className={className} aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round">
+      <path d="M4 16C24 12 48 10 76 4" />
+      {[14, 26, 38, 50, 62].map((x, i) => (
+        <g key={x}>
+          <path d={`M${x} ${15 - i * 2}c2-5 6-7 10-7-2 4-6 6-10 7z`} />
+          <path d={`M${x + 2} ${15 - i * 2}c4 2 8 2 11 0-4-2-8-2-11 0z`} />
+        </g>
+      ))}
+    </svg>
+  );
+}

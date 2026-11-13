@@ -14,6 +14,8 @@ export interface Profile {
   headline: LocalizedText;
   intro: LocalizedText;
   location: LocalizedText;
+  /** Editorial portrait on the Home front page. */
+  portrait: { src: string; alt: LocalizedText; caption: LocalizedText };
 }
 
 /** A professional link. Only real, confirmed links belong here. */

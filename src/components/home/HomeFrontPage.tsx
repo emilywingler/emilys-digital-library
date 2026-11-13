@@ -1,13 +1,12 @@
 import { ArrowDown } from "lucide-react";
 import { Divider, Flourish } from "@/components/decor/Ornaments";
 import { useLocale } from "@/i18n/locale";
-import type { ContactLink, Profile } from "@/types/content";
+import type { Profile } from "@/types/content";
 import { NewspaperMasthead } from "./NewspaperMasthead";
-import { ClassifiedLinks } from "./ClassifiedLinks";
+import { NewspaperPortrait } from "./NewspaperPortrait";
 
 interface Props {
   profile: Profile;
-  links: ContactLink[];
 }
 
 /**
@@ -15,7 +14,7 @@ interface Props {
  * Data comes in as props (from `src/content`), so this component never knows
  * whether content is static or fetched.
  */
-export function HomeFrontPage({ profile, links }: Props) {
+export function HomeFrontPage({ profile }: Props) {
   const { locale, t } = useLocale();
   return (
     <section id="home" aria-labelledby="home-title" className="px-3 pb-12 pt-6 sm:px-6 sm:pt-10">
@@ -36,8 +35,9 @@ export function HomeFrontPage({ profile, links }: Props) {
           </p>
         </header>
 
-        <div className="mt-6 grid gap-8 md:grid-cols-[1fr_18rem] md:gap-10">
-          <div className="md:border-r md:border-rule md:pr-10">
+        <div className="mt-6 grid gap-8 md:grid-cols-[1fr_17rem] lg:grid-cols-[1fr_19rem] md:gap-10">
+          <NewspaperPortrait portrait={profile.portrait} />
+          <div className="md:order-first md:border-r md:border-rule md:pr-10">
             <h2 className="font-masthead text-sm uppercase tracking-[0.25em] text-paper-muted">
               {t.home.profileHeading} · {profile.location[locale]}
             </h2>
@@ -45,7 +45,6 @@ export function HomeFrontPage({ profile, links }: Props) {
               {profile.intro[locale]}
             </p>
           </div>
-          <ClassifiedLinks links={links} />
         </div>
 
         <Divider className="mt-8 h-4 w-full text-paper-muted" />

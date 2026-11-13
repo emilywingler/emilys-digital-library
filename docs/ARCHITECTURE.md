@@ -36,3 +36,7 @@ Replace imports from `src/content` in `PortfolioPage` with a loader/query that r
 - Media: add items to `media` (`image`, `gif`, `video`, `video-link`, `dashboard`). Empty list = faint-cover "plates in preparation" page.
 - Responsive book: at 960px+ two leaves have at least 434px each, with 12px binding and 80px viewport clearance; below 960px one bound leaf is capped at 560px. Below 600px mobile spacing reserves room for the always-visible 44px close button. Width, not viewport height, sizes the spread, so short screens scroll instead of compressing text.
 - Scrolling: `.book-scroll.scrollbar-archive` is the only overflow surface, limited to viewport height minus 64px. Both pages grow with their content; there is no per-page scrolling. Radix locks the background. Single-leaf modes omit empty media and unconfirmed contribution placeholders but retain confirmed contribution and all real media. The localized cover retains its 595:842 ratio in every mode; reduced motion still skips the sequence.
+
+## Contact & portrait (Milestone 5)
+- `ContactBookmark` is the final section and footer; links come from `content/links.ts`.
+- The Home portrait is `profile.portrait` (asset pointer in `src/assets/profile/`), framed by `NewspaperPortrait`.
