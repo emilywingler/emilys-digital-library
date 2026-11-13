@@ -26,7 +26,7 @@ const pt = {
   contact: { title: "Vamos manter contato.", lead: "Para conversas, oportunidades ou indicações de leitura.", linksLabel: "Formas de contato", newTab: "(abre em nova aba)" },
   experience: { title: "Experiência", kicker: "Arquivo", hint: "Selecione uma pasta", education: "Formação acadêmica", tabsLabel: "Pastas de experiência" },
   skills: { title: "Habilidades", kicker: "Catálogo", drawersLabel: "Gavetas do catálogo de habilidades", seeAlso: "Ver em", levels: { familiarity: "Familiaridade", developing: "Em desenvolvimento", practical: "Experiência prática" } },
-  projects: { title: "A Biblioteca de Projetos", kicker: "Estante", hint: "Escolha um livro para abri-lo.", open: "Abrir livro", close: "Fechar livro", tech: "Tecnologias", role: "Minha contribuição", rolePending: "A confirmar — descrição da minha contribuição", repo: "Ver no GitHub", newTab: "(abre em nova aba)", plateLabel: "Ilustração do projeto", plateEmpty: "Ilustrações em preparação" },
+  projects: { title: "A Biblioteca de Projetos", kicker: "Estante", hint: "Escolha um livro para abri-lo.", open: "Abrir livro", close: "Fechar livro", tech: "Tecnologias", role: "Minha contribuição", rolePending: "A confirmar — descrição da minha contribuição", repo: "Ver no GitHub", newTab: "(abre em nova aba)", plateLabel: "Ilustração do projeto", plateEmpty: "Ilustrações em preparação", prev: "Ilustração anterior", next: "Próxima ilustração", position: "{n} de {total}", enlarge: "Ampliar imagem", closeEnlarged: "Fechar imagem ampliada", video: "Vídeo" },
 };
 
 export type Messages = typeof pt;
@@ -55,7 +55,7 @@ const en: Messages = {
   contact: { title: "Let's keep in touch.", lead: "For conversations, opportunities or reading suggestions.", linksLabel: "Ways to reach me", newTab: "(opens in a new tab)" },
   experience: { title: "Experience", kicker: "Archive", hint: "Select a folder", education: "Academic education", tabsLabel: "Experience folders" },
   skills: { title: "Skills", kicker: "Catalog", drawersLabel: "Skills catalog drawers", seeAlso: "See", levels: { familiarity: "Familiarity", developing: "Developing", practical: "Practical experience" } },
-  projects: { title: "The Project Library", kicker: "Shelf", hint: "Pick a book to open it.", open: "Open book", close: "Close book", tech: "Technologies", role: "My contribution", rolePending: "To be confirmed — description of my contribution", repo: "View on GitHub", newTab: "(opens in a new tab)", plateLabel: "Project illustration", plateEmpty: "Plates in preparation" },
+  projects: { title: "The Project Library", kicker: "Shelf", hint: "Pick a book to open it.", open: "Open book", close: "Close book", tech: "Technologies", role: "My contribution", rolePending: "To be confirmed — description of my contribution", repo: "View on GitHub", newTab: "(opens in a new tab)", plateLabel: "Project illustration", plateEmpty: "Plates in preparation", prev: "Previous plate", next: "Next plate", position: "{n} of {total}", enlarge: "Enlarge image", closeEnlarged: "Close enlarged image", video: "Video" },
 };
 
 export const messages: Record<"pt" | "en", Messages> = { pt, en };

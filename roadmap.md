@@ -1,3 +1,6 @@
+# Milestone 6 — Project media
+
+- [x] Media model, five uploaded images, gallery, video support, enlarge view, tests, docs.
 # Responsive book redesign
 
 - [x] Adapt the opened book to readable spread, single-page tablet, and vertical mobile modes without changing the shelf or content.

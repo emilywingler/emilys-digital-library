@@ -2,7 +2,8 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createMemoryHistory, createRootRoute, createRouter, RouterProvider } from "@tanstack/react-router";
 import { ProjectLibrary, LIFT_MS } from "@/components/library/ProjectLibrary";
-import { BookPageMedia } from "@/components/library/BookPageMedia";
+import { BookPageMedia, videoEmbedUrl } from "@/components/library/BookPageMedia";
+import { messages } from "@/i18n/messages";
 import { COVER_MS, HINGE_MS, CLOSE_MS } from "@/components/library/OpenBook";
 import { projects, shelfDecor } from "@/content/projects";
 
@@ -142,25 +143,68 @@ describe("ProjectLibrary", () => {
 });
 
 describe("BookPageMedia", () => {
-  const base = projects[1]!;
+  const base = { ...projects[1]!, media: [] };
+  const t = (l: "pt" | "en") => messages[l].projects;
+  const img = (n: number, extra = {}) => ({ kind: "image" as const, src: `/i${n}.png`, width: 4, height: 3, alt: { pt: `imagem ${n}`, en: `image ${n}` }, ...extra });
+
   it("renders an intentional empty plate without media", () => {
-    render(<BookPageMedia project={base} locale="pt" emptyLabel="Ilustrações em preparação" />);
+    render(<BookPageMedia project={base} locale="pt" t={t("pt")} />);
     expect(document.querySelector("[data-media-empty]")).toHaveTextContent("Ilustrações em preparação");
   });
-  it("renders each media type", () => {
-    const t = { pt: "a", en: "b" };
-    render(<BookPageMedia locale="en" emptyLabel="" project={{ ...base, media: [
-      { type: "image", src: "/i.png", alt: { pt: "img", en: "Image" } },
-      { type: "gif", src: "/g.gif", alt: { pt: "gif", en: "Gif" } },
-      { type: "video", src: "/v.mp4", caption: t },
-      { type: "video-link", href: "https://x.test", label: { pt: "v", en: "Watch" } },
-      { type: "dashboard", embedUrl: "https://d.test", title: { pt: "p", en: "Board" } },
+  it("renders a single image with localized alt and no gallery controls", () => {
+    render(<BookPageMedia project={{ ...base, media: [img(1)] }} locale="en" t={t("en")} />);
+    expect(screen.getByRole("img", { name: "image 1" })).toHaveAttribute("src", "/i1.png");
+    expect(screen.queryByRole("button", { name: "Next plate" })).toBeNull();
+    expect(document.querySelector("figcaption")).toBeNull();
+  });
+  it("pages through several media in PT and EN", () => {
+    const { unmount } = render(<BookPageMedia project={{ ...base, media: [img(1), img(2, { caption: { pt: "legenda", en: "caption" } })] }} locale="pt" t={t("pt")} />);
+    expect(screen.getByText("1 de 2")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Próxima ilustração" }));
+    expect(screen.getByText("2 de 2")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "imagem 2" })).toBeInTheDocument();
+    expect(screen.getByText("legenda")).toBeInTheDocument();
+    fireEvent.keyDown(screen.getByRole("button", { name: "Ilustração anterior" }), { key: "ArrowLeft" });
+    expect(screen.getByText("1 de 2")).toBeInTheDocument();
+    unmount();
+    render(<BookPageMedia project={{ ...base, media: [img(1), img(2)] }} locale="en" t={t("en")} />);
+    fireEvent.click(screen.getByRole("button", { name: "Previous plate" }));
+    expect(screen.getByText("2 of 2")).toBeInTheDocument();
+  });
+  it("renders local video with poster and hosted video as an embed", () => {
+    const { unmount } = render(<BookPageMedia locale="en" t={t("en")} project={{ ...base, media: [
+      { kind: "video", source: { provider: "file", src: "/v.mp4" }, poster: "/p.jpg", title: { pt: "v", en: "Demo" } },
     ] }} />);
-    expect(screen.getByRole("img", { name: "Image" })).toBeInTheDocument();
-    expect(screen.getByRole("img", { name: "Gif" })).toBeInTheDocument();
-    expect(document.querySelector("video")).toHaveAttribute("src", "/v.mp4");
-    expect(screen.getByRole("link", { name: /Watch/ })).toHaveAttribute("href", "https://x.test");
-    expect(screen.getByTitle("Board")).toBeInTheDocument();
-    expect(document.querySelector("[data-media-empty]")).toBeNull();
+    const v = document.querySelector("video")!;
+    expect(v).toHaveAttribute("src", "/v.mp4");
+    expect(v).toHaveAttribute("poster", "/p.jpg");
+    expect(v).toHaveAttribute("controls");
+    unmount();
+    render(<BookPageMedia locale="pt" t={t("pt")} project={{ ...base, media: [
+      { kind: "video", source: { provider: "youtube", id: "abc" }, title: { pt: "Demonstração", en: "Demo" } },
+    ] }} />);
+    expect(screen.getByTitle("Demonstração")).toHaveAttribute("src", "https://www.youtube-nocookie.com/embed/abc");
+    expect(document.querySelector("video")).toBeNull();
+  });
+  it("builds Vimeo embeds", () => {
+    expect(videoEmbedUrl({ provider: "vimeo", id: "42" })).toBe("https://player.vimeo.com/video/42");
+    expect(videoEmbedUrl({ provider: "file", src: "/x.mp4" })).toBeNull();
+  });
+  it("enlarges an image and Escape closes only the enlarged view", async () => {
+    await setup();
+    await openFirst();
+    const trigger = screen.getByRole("button", { name: /^Ampliar imagem/ });
+    fireEvent.click(trigger);
+    expect(screen.getByRole("button", { name: "Fechar imagem ampliada" })).toBeInTheDocument();
+    fireEvent.keyDown(document.activeElement!, { key: "Escape" });
+    await act(async () => { await vi.advanceTimersByTimeAsync(50); });
+    expect(screen.queryByRole("button", { name: "Fechar imagem ampliada" })).toBeNull();
+    expect(screen.getByTestId("open-book")).toBeInTheDocument();
+    expect(document.activeElement).toBe(trigger);
+  });
+  it("marks the plate available when a project has media", async () => {
+    await setup("/en");
+    await openFirst();
+    expect(document.querySelector(".book-page-right")).toHaveAttribute("data-media-state", "available");
   });
 });

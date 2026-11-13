@@ -65,7 +65,7 @@ export function OpenBook({ project, locale, t, reduceMotion, onClosed, returnFoc
               <div className="book-spread">
                 <section className="book-page book-page-left paper"><div className="book-page-content h-full"><BookPageInfo project={project} locale={locale} t={t} /></div></section>
                 <div className="book-gutter" aria-hidden="true" />
-                 <section className="book-page book-page-right" data-media-state={project.media.length ? "available" : "empty"} aria-label={t.plateLabel}><div className="book-page-content h-full"><BookPageMedia project={project} locale={locale} emptyLabel={t.plateEmpty} /></div></section>
+                 <section className="book-page book-page-right" data-media-state={project.media.length ? "available" : "empty"} aria-label={t.plateLabel}><div className="book-page-content h-full"><BookPageMedia project={project} locale={locale} t={t} /></div></section>
               </div>
             </div>
             {phase !== "open" && phase !== "closing" && (

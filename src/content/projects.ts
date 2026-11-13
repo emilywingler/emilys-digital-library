@@ -1,3 +1,8 @@
+import olistOverview from "@/assets/projects/olist/media/marketplace-overview.png.asset.json";
+import pendulumPrototype from "@/assets/projects/pendulum/media/prototype.png.asset.json";
+import studiesButterfly from "@/assets/projects/ml-studies/media/butterfly.png.asset.json";
+import bakeryReports from "@/assets/projects/bakery/media/monthly-reports.png.asset.json";
+import bakeryAccounts from "@/assets/projects/bakery/media/accounts.png.asset.json";
 import type { Project, ShelfDecor } from "@/types/content";
 import olistCoverPt from "@/assets/projects/olist/cover-pt.svg.asset.json";
 import olistCoverEn from "@/assets/projects/olist/cover-en.svg.asset.json";
@@ -36,7 +41,9 @@ export const projects: Project[] = [
     technologies: ["Python", "pandas", "NumPy", "Matplotlib", "Jupyter Notebook", "Power BI"],
     contribution: null,
     repoUrl: "https://github.com/emilywingler/analise-ecommerce-olist",
-    cover: { pt: olistCoverPt.url, en: olistCoverEn.url }, spine: olistSpine.url, media: [],
+    cover: { pt: olistCoverPt.url, en: olistCoverEn.url }, spine: olistSpine.url, media: [{ kind: "image", src: olistOverview.url, width: 1923, height: 1533,
+      alt: { pt: "Gráfico \"Visão geral do marketplace\": receita mensal de produtos de set/2016 a ago/2018 com pico em nov/2017, status dos pedidos e top 10 estados dos clientes.", en: "\"Marketplace overview\" chart: monthly product revenue from Sep 2016 to Aug 2018 peaking in Nov 2017, order status and top 10 customer states." },
+      caption: { pt: "Gráfico da análise. O painel em Power BI ainda está em desenvolvimento.", en: "A chart from the analysis. The Power BI dashboard is still in progress." } }],
   },
   {
     id: "pendulum", catalogNo: "PRJ-002", shelf: 1, order: 4, featured: true, spineHeight: 21,
@@ -56,7 +63,9 @@ export const projects: Project[] = [
     technologies: ["ESP32", "MPU9250", "C++ (Arduino)", { pt: "Filtro complementar", en: "Complementary filter" }, { pt: "Controle PI", en: "PI control" }],
     contribution: null,
     repoUrl: "https://github.com/emilywingler/Controle-de-Estabilidade-de-um-P-ndulo-Bimotor-1-DOF",
-    cover: { pt: pendulumCoverPt.url, en: pendulumCoverEn.url }, spine: pendulumSpine.url, media: [],
+    cover: { pt: pendulumCoverPt.url, en: pendulumCoverEn.url }, spine: pendulumSpine.url, media: [{ kind: "image", src: pendulumPrototype.url, width: 1086, height: 729,
+      alt: { pt: "Protótipo do pêndulo bimotor em bancada: haste com hélices sobre suporte de madeira, fios ligados à placa e uma fonte de alimentação ao lado.", en: "The bimotor pendulum prototype on a bench: a propeller arm on a wooden stand, wires to the board and a power supply beside it." },
+      caption: { pt: "O protótipo em bancada.", en: "The prototype on the bench." } }],
   },
   {
     id: "ml-studies", catalogNo: "PRJ-003", shelf: 1, order: 5, featured: false, spineHeight: 19.5,
@@ -76,7 +85,9 @@ export const projects: Project[] = [
     technologies: ["Python", "pandas", "SQL", { pt: "Estatística", en: "Statistics" }, "AWS SageMaker", "AWS S3", "AWS Bedrock", "MLOps", "LLMs", { pt: "Visão computacional", en: "Computer vision" }],
     contribution: null,
     repoUrl: "https://github.com/emilywingler/Estudos-com-enfoque-em-Machine-Learning-e-Data-Science",
-    cover: { pt: studiesCoverPt.url, en: studiesCoverEn.url }, spine: studiesSpine.url, media: [],
+    cover: { pt: studiesCoverPt.url, en: studiesCoverEn.url }, spine: studiesSpine.url, media: [{ kind: "image", src: studiesButterfly.url, width: 512, height: 512,
+      alt: { pt: "Ilustração de uma borboleta em tons de rosa e azul.", en: "Illustration of a butterfly in pink and blue." },
+      caption: { pt: "Imagem do repositório de estudos.", en: "Image from the study repository." } }],
   },
   {
     id: "bakery", catalogNo: "PRJ-004", shelf: 1, order: 6, featured: false, spineHeight: 18.5,
@@ -97,7 +108,14 @@ export const projects: Project[] = [
     contribution: null,
     repoUrl: "https://github.com/emilywingler/Sistema_Padaria",
     links: [{ label: { pt: "Diagrama UML", en: "UML diagram" }, href: "https://lucid.app/lucidchart/6489d7bc-bc9a-4903-986c-0b3dabb231fd/edit?invitationId=inv_f00eb130-1baf-4d5a-bcbe-ecc79af7f850&page=hF_BlsUKGquW#" }],
-    cover: { pt: bakeryCoverPt.url, en: bakeryCoverEn.url }, spine: bakerySpine.url, media: [],
+    cover: { pt: bakeryCoverPt.url, en: bakeryCoverEn.url }, spine: bakerySpine.url, media: [
+      { kind: "image", src: bakeryReports.url, width: 903, height: 600,
+        alt: { pt: "Janela \"Gerar Relatórios Mensais\" com opções de relatório e pré-visualização do total a receber por cliente.", en: "\"Generate monthly reports\" window with report options and a preview of the total receivable per customer." },
+        caption: { pt: "Relatórios mensais na interface gráfica.", en: "Monthly reports in the graphical interface." } },
+      { kind: "image", src: bakeryAccounts.url, width: 806, height: 607,
+        alt: { pt: "Janela do Sistema de Gestão de Padaria com botões Contas a Pagar e Contas a Receber e uma tabela de vendas com total a receber.", en: "Bakery Management System window with Accounts Payable and Accounts Receivable buttons and a sales table with the total receivable." },
+        caption: { pt: "Tela de contas.", en: "The accounts screen." } },
+    ],
   },
 ];
 

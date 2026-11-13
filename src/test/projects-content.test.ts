@@ -43,4 +43,19 @@ describe("project library content", () => {
     const ids = new Set(projects.map((p) => p.id));
     expect(shelfDecor.some((d) => ids.has(d.id))).toBe(false);
   });
+  it("gives every project at least one media item with PT and EN alt text", () => {
+    for (const p of projects) {
+      expect(p.media.length).toBeGreaterThan(0);
+      for (const m of p.media) if (m.kind === "image") {
+        expect(m.alt.pt.length).toBeGreaterThan(5); expect(m.alt.en.length).toBeGreaterThan(5);
+        expect(m.src).toMatch(/^\/__l5e\/assets-v1\//);
+      }
+    }
+    expect(byId["bakery"]!.media).toHaveLength(2);
+  });
+  it("presents the Olist image without implying the dashboard is finished", () => {
+    const c = byId["olist"]!.media[0]!.caption!;
+    expect(c.pt).toMatch(/em desenvolvimento/);
+    expect(c.en).toMatch(/in progress/);
+  });
 });

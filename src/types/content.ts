@@ -64,12 +64,33 @@ export interface SkillCategory {
   skills: SkillEntry[];
 }
 
-/** Optional visual shown on the right page of an open book. Discriminated by `type`. */
-export type ProjectMedia =
-  | { type: "image" | "gif"; src: string; alt: LocalizedText }
-  | { type: "video"; src: string; poster?: string; caption: LocalizedText }
-  | { type: "video-link"; href: string; label: LocalizedText }
-  | { type: "dashboard"; embedUrl: string; title: LocalizedText };
+/**
+ * Media shown on the right page ("plate") of an open book. `src`/`poster` are
+ * plain URLs (today asset-pointer URLs, later e.g. storage URLs), so the
+ * storage provider never leaks into components. Order = array order.
+ */
+interface MediaBase {
+  caption?: LocalizedText;
+  description?: LocalizedText;
+}
+export interface ImageMedia extends MediaBase {
+  kind: "image";
+  src: string;
+  alt: LocalizedText;
+  /** Intrinsic pixel size; reserves the frame's aspect ratio (no layout shift). */
+  width: number;
+  height: number;
+}
+export type VideoSource =
+  | { provider: "file"; src: string }
+  | { provider: "youtube" | "vimeo"; id: string };
+export interface VideoMedia extends MediaBase {
+  kind: "video";
+  source: VideoSource;
+  title: LocalizedText;
+  poster?: string;
+}
+export type ProjectMedia = ImageMedia | VideoMedia;
 
 /** One real project book on the shelf. */
 export interface Project {

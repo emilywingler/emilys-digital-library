@@ -386,6 +386,24 @@
   box-shadow: 0 6px 14px -4px oklch(0.05 0.01 50 / 80%); }
 .book-close:hover { background: var(--dark-brown); }
 
+/* Media plate: framed like a tipped-in plate on the right page. */
+.plate-page { padding: 2.5rem 2rem; gap: 1rem; }
+.plate-frame { display: block; width: 100%; max-height: calc(var(--page-h) - 9rem); margin-inline: auto; padding: 0.4rem;
+  background: var(--paper); border: 1px solid oklch(0.3 0.03 50 / 30%); box-shadow: 0 8px 18px -10px oklch(0.1 0.01 60 / 60%); }
+.plate-zoom { cursor: zoom-in; }
+.plate-zoom:focus-visible, .plate-nav-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.plate-nav { display: flex; align-items: center; justify-content: center; gap: 0.75rem; }
+.plate-nav-btn { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; cursor: pointer;
+  color: var(--paper-foreground); border: 1px solid oklch(0.3 0.03 50 / 35%); background: transparent; }
+.plate-nav-btn:hover { background: oklch(0.3 0.03 50 / 10%); }
+.plate-nav-pos { min-width: 4.5rem; text-align: center; font-family: var(--font-masthead); font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper-muted); }
+.plate-lightbox-overlay { background: oklch(0.1 0.01 60 / 85%); }
+.plate-lightbox { width: max-content; max-width: calc(100vw - 2rem); }
+.plate-lightbox-img { display: block; max-width: calc(100vw - 2rem); max-height: calc(100dvh - 6rem); object-fit: contain; background: var(--paper); border-radius: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .plate-lightbox-overlay, .plate-lightbox { animation: lib-fade-in 0.2s ease-out both; }
+}
+
 /* Narrow tablets: a full-width bound leaf, not a compressed spread.
    Only the shared book-scroll can scroll; empty media/contribution placeholders
    remain on desktop but do not create blank mobile pages. */
@@ -399,6 +417,9 @@
   .book-running-head { padding-right: 2.5rem; }
   .book-cover { right: auto; left: 50%; width: min(var(--page-w), calc((100dvh - 4rem) * 595 / 842)); translate: -50% 0; border-radius: 3px; }
   .book-close { top: 0.5rem; right: 0.5rem; }
+  .plate-page { padding: 1.5rem 1.5rem 2rem 2rem; }
+  .plate-frame { max-height: 60dvh; }
+  .plate-frame img { max-height: calc(60dvh - 0.8rem); }
 }
 
 /* Phones: continuous editorial page with lighter binding and touch clearance. */
@@ -407,6 +428,7 @@
   .book-spread { border-left-width: 0.4rem; }
   .book-info { padding: 3.75rem 1.25rem 1.75rem 1.5rem; }
   .book-running-head { padding-right: 0; }
+  .plate-page { padding: 1.25rem 1rem 1.75rem 1.4rem; }
 }
 
 /* Home portrait: gentle archival tone; the photo itself is untouched. */
