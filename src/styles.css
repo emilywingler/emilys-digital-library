@@ -595,3 +595,63 @@ a.journal-cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 3p
   .bookmark-wrap:hover { transform: none; }
   .star-cursor { display: none; }
 }
+
+/* ---------- Section hand-offs ("rooms of one library") ----------
+ * `--enter` / `--leave` (0→1) are driven either by scroll-driven keyframes
+ * (`main[data-motion=css]`) or by useSectionMotion (`main[data-motion=js]`),
+ * never both. Without data-motion (reduced motion / SSR) nothing moves.
+ * Projects is never transformed: only a decorative curtain layer fades. */
+@property --enter { syntax: "<number>"; inherits: true; initial-value: 1; }
+@property --leave { syntax: "<number>"; inherits: true; initial-value: 0; }
+@keyframes sec-enter { from { --enter: 0; } to { --enter: 1; } }
+@keyframes sec-leave { from { --leave: 0; } to { --leave: 1; } }
+:root { --handoff-amp: 1; }
+@media (max-width: 767px) { :root { --handoff-amp: 0.5; } }
+
+main[data-motion="css"] [data-section] {
+  animation: sec-enter linear both, sec-leave linear both;
+  animation-timeline: view(), view();
+  animation-range: entry 0% entry 60%, exit 0% exit 100%;
+}
+main[data-motion] [data-section] { will-change: transform, opacity; transform-origin: 50% 0; }
+main[data-motion] [data-section="home"] {
+  transform: translateY(calc(var(--leave) * 18px * var(--handoff-amp))) scale(calc(1 - var(--leave) * 0.02 * var(--handoff-amp)));
+  opacity: calc(1 - var(--leave) * 0.3);
+}
+main[data-motion] [data-section="experience"] {
+  transform: translateY(calc((1 - var(--enter)) * 24px * var(--handoff-amp))) scale(calc(1 - var(--leave) * 0.015 * var(--handoff-amp)));
+  opacity: calc((0.4 + var(--enter) * 0.6) * (1 - var(--leave) * 0.25));
+}
+main[data-motion] [data-section="skills"] {
+  position: relative;
+  transform: translateY(calc((1 - var(--enter)) * 20px * var(--handoff-amp)));
+  opacity: calc(0.4 + var(--enter) * 0.6);
+}
+main[data-motion] [data-section="skills"]::before {
+  content: ""; position: absolute; inset: 0 1.5rem auto; height: 1px; pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--gold, currentColor) 45%, transparent), transparent);
+  box-shadow: 0 6px 18px color-mix(in oklab, black 50%, transparent);
+  opacity: calc(1 - var(--enter));
+}
+main[data-motion] [data-section="projects"] { position: relative; will-change: auto; }
+main[data-motion] [data-section="projects"]::before {
+  content: ""; position: absolute; inset: 0 0 auto; height: 40%; pointer-events: none; z-index: 1;
+  background: linear-gradient(to bottom, var(--background) 0%, color-mix(in oklab, var(--background) 60%, transparent) 55%, transparent);
+  opacity: calc((1 - var(--enter)) * 0.9);
+  transform: translateY(calc(var(--enter) * -24px));
+}
+@media (max-width: 599px) { main[data-motion] [data-section="projects"]::before { display: none; } }
+main[data-motion] [data-section="journal"] {
+  transform: translateY(calc((1 - var(--enter)) * 20px * var(--handoff-amp))) rotate(calc((1 - var(--enter)) * -0.6deg * var(--handoff-amp)));
+  opacity: calc(0.35 + var(--enter) * 0.65);
+}
+main[data-motion] [data-section="contact"] {
+  transform: translateY(calc((var(--enter) - 1) * 16px * var(--handoff-amp)));
+  opacity: calc(0.4 + var(--enter) * 0.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  main [data-section] { animation: none !important; transform: none !important; opacity: 1 !important; }
+  main [data-section]::before { display: none !important; }
+}
+/* Hand-off rotation must never create sideways scroll. */
+main[data-motion] { overflow-x: clip; }

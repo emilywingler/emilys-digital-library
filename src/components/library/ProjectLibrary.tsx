@@ -30,7 +30,7 @@ export function ProjectLibrary({ projects, decor }: { projects: Project[]; decor
   };
 
   return (
-    <section data-reveal id="projects" aria-labelledby="projects-title" className="mx-auto max-w-5xl px-3 py-12 sm:px-6">
+    <section data-section="projects" id="projects" aria-labelledby="projects-title" className="mx-auto max-w-5xl px-3 py-12 sm:px-6">
       <h2 id="projects-title" className="mb-6 font-display text-3xl italic text-foreground">
         <span className="block font-masthead text-xs not-italic uppercase tracking-[0.3em] text-primary">{t.projects.kicker}</span>
         {t.projects.title}

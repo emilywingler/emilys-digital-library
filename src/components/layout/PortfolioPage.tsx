@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { StarCursor } from "@/components/cursor/StarCursor";
 import { useRevealOnce } from "@/hooks/useRevealOnce";
+import { useSectionMotion } from "@/hooks/useSectionMotion";
 import { HomeFrontPage } from "@/components/home/HomeFrontPage";
 import { contactLinks } from "@/content/links";
 import { profile } from "@/content/profile";
@@ -23,6 +24,7 @@ import { ContactBookmark } from "@/components/contact/ContactBookmark";
 export function PortfolioPage() {
   const main = useRef<HTMLElement>(null);
   useRevealOnce(main);
+  useSectionMotion(main);
   return (
     <>
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">

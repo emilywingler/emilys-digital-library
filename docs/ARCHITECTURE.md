@@ -57,3 +57,7 @@ Replace imports from `src/content` in `PortfolioPage` with a loader/query that r
 - Cursor: `StarCursor` is mounted once in `PortfolioPage`, enabled only for `(hover: hover) and (pointer: fine)`. The native cursor stays visible; the star trails it, grows over controls and shows a label from `messages.cursor` chosen by `resolveCursor` (spine → open book, X/overlay → close, plate → view image, unselected tab → open tab/drawer, links → explore/new tab/email). Hidden on keydown and after clicks until the pointer moves.
 - Reveal: add `data-reveal` to an element inside `<main>`; `useRevealOnce` marks only below-the-fold elements `pending` and shows each once.
 - Book pages: `.book-scroll` is hidden in `cover`/`returning`, fades in over the second half of the hinge, and fades out under the folding cover. Spine hover leans `.book-spine-body` only, so the button rect used for the return animation never moves.
+
+## Section hand-offs
+- Sections carry `data-section`. `useSectionMotion` (mounted once in `PortfolioPage`) sets `main[data-motion]`: `css` when scroll-driven timelines + `CSS.registerProperty` exist (keyframes animate `--enter`/`--leave`), otherwise `js` (one passive rAF-batched listener writes the same variables). Reduced motion sets nothing → static.
+- One CSS block ("Section hand-offs") maps the variables per section; Projects is never transformed, only a decorative `::before` curtain fades (hidden below 600px). Intensity halves below 768px; `main` clips horizontal overflow.

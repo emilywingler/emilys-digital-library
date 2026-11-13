@@ -14,7 +14,7 @@ const ICONS = { github: Github, linkedin: Linkedin, email: Mail } as const;
 export function ContactBookmark({ links }: { links: ContactLink[] }) {
   const { t } = useLocale();
   return (
-    <footer id="contact" aria-labelledby="contact-title" className="px-4 pb-14 pt-10 sm:px-6">
+    <footer data-section="contact" id="contact" aria-labelledby="contact-title" className="px-4 pb-14 pt-10 sm:px-6">
       <div className="bookmark-wrap relative mx-auto max-w-sm md:max-w-4xl" data-reveal>
         <Tassel className="tassel-sway pointer-events-none absolute -top-6 left-5 z-10 h-28 w-9 text-gold md:-left-12 md:top-1/2 md:-translate-y-1/2 md:rotate-90" />
         <div className="bookmark paper relative rounded-t-[1.5rem] px-6 pb-6 pt-12 md:rounded-l-[1.5rem] md:rounded-tr-none md:px-12 md:py-8">

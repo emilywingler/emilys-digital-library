@@ -7,7 +7,7 @@ export function SkillsCatalog({ categories, experience }: { categories: SkillCat
   const { locale, t } = useLocale();
   const experienceNames = Object.fromEntries(experience.map((e) => [e.id, e.organization]));
   return (
-    <section data-reveal id="skills" aria-labelledby="skills-title" className="mx-auto max-w-5xl px-3 py-12 sm:px-6">
+    <section data-section="skills" id="skills" aria-labelledby="skills-title" className="mx-auto max-w-5xl px-3 py-12 sm:px-6">
       <h2 id="skills-title" className="mb-4 font-display text-3xl italic text-foreground">
         <span className="block font-masthead text-xs not-italic uppercase tracking-[0.3em] text-primary">{t.skills.kicker}</span>
         {t.skills.title}

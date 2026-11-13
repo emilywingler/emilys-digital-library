@@ -46,3 +46,4 @@ use the editor.
 - OpenBook closes `open → folding → returning` (cover/opening skip to returning); the return transform is measured from the spine rect at return start — keeps the physical-book metaphor without new deps.
 - Motion: shared tokens/keyframes live in the "Milestone 8 — motion system" block of `src/styles.css`; one `StarCursor` (fine pointers only) labels controls via `resolveCursor` in `src/components/cursor/cursorLabel.ts`; section entrances use `[data-reveal]` + `useRevealOnce` (visible by default) — one system, no animation library.
 - OpenBook page visibility is driven only by `data-phase` on `.book-scroll` (hidden in cover/returning, fades in/out in opening/folding), never tied to the cover — prevents blank page rectangles.
+- Section-to-section motion: `[data-section]` + `useSectionMotion` drive `--enter`/`--leave` (CSS scroll timelines, JS fallback, never both); Projects section is never transformed — keeps spine measurements exact.

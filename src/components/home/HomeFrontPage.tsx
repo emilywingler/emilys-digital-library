@@ -17,7 +17,7 @@ interface Props {
 export function HomeFrontPage({ profile }: Props) {
   const { locale, t } = useLocale();
   return (
-    <section id="home" aria-labelledby="home-title" className="px-3 pb-12 pt-6 sm:px-6 sm:pt-10">
+    <section data-section="home" id="home" aria-labelledby="home-title" className="px-3 pb-12 pt-6 sm:px-6 sm:pt-10">
       <article className="paper relative mx-auto max-w-5xl home-reveal px-5 py-6 sm:px-10 sm:py-10">
         <Flourish className="pointer-events-none absolute left-2 top-2 h-8 w-8 text-paper-muted/60" />
         <Flourish className="pointer-events-none absolute right-2 top-2 h-8 w-8 rotate-90 text-paper-muted/60" />
