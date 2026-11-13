@@ -1,4 +1,6 @@
 import { OrnateArrow } from "@/components/decor/OrnateArrow";
+import { Linkedin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Divider, Flourish } from "@/components/decor/Ornaments";
 import { useLocale } from "@/i18n/locale";
 import type { Profile } from "@/types/content";
@@ -7,6 +9,7 @@ import { NewspaperPortrait } from "./NewspaperPortrait";
 
 interface Props {
   profile: Profile;
+  linkedInUrl?: string | undefined;
 }
 
 /**
@@ -14,7 +17,7 @@ interface Props {
  * Data comes in as props (from `src/content`), so this component never knows
  * whether content is static or fetched.
  */
-export function HomeFrontPage({ profile }: Props) {
+export function HomeFrontPage({ profile, linkedInUrl }: Props) {
   const { locale, t } = useLocale();
   return (
     <section data-section="home" id="home" aria-labelledby="home-title" className="px-3 pb-12 pt-6 sm:px-6 sm:pt-10">
@@ -44,6 +47,23 @@ export function HomeFrontPage({ profile }: Props) {
             <p className="drop-cap mt-3 text-lg leading-relaxed sm:columns-2 sm:gap-8 [hyphens:auto]" lang={locale === "pt" ? "pt-BR" : "en"}>
               {profile.intro[locale]}
             </p>
+            <div className="home-actions mt-6">
+              {linkedInUrl && (
+                <Button asChild variant="ghost" className="home-cta home-cta-primary">
+                  <a href={linkedInUrl} target="_blank" rel="noopener noreferrer">
+                    <Linkedin aria-hidden="true" />
+                    <span>{t.home.connectLinkedIn}</span>
+                    <span className="sr-only">{t.contact.newTab}</span>
+                  </a>
+                </Button>
+              )}
+              <Button asChild variant="ghost" className="home-cta home-cta-secondary">
+                <a href="#projects">
+                  <span>{t.home.exploreProjects}</span>
+                  <OrnateArrow direction="down" length="1.25rem" />
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
 

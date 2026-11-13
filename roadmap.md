@@ -26,3 +26,8 @@
 # Comment 3af02d34 — bookmark tassel
 
 - [x] Connect the desktop cord to the hole, keep it visible on tablets, and verify its one-time mobile sway in PT/EN (1791, 1024, 768, 390, 360; reduced motion remains static).
+
+# Home CTAs
+
+- [x] Add localized LinkedIn and Projects actions below the introduction using the existing contact URL and native section navigation.
+- [x] Verify desktop/mobile layout, keyboard focus, destination clearance, and reduced motion (PT/EN at 1478, 1024, 768, 598, 390, 360 px).

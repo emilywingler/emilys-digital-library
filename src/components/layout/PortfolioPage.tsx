@@ -32,7 +32,7 @@ export function PortfolioPage() {
       </a>
       <SiteHeader />
       <main id="main" ref={main}>
-        <HomeFrontPage profile={profile} />
+        <HomeFrontPage profile={profile} linkedInUrl={contactLinks.find((link) => link.id === "linkedin")?.href} />
         <ExperienceFolder entries={experience} />
         <SkillsCatalog categories={skillCategories} experience={experience} />
         <ProjectLibrary projects={projects} decor={shelfDecor} />
