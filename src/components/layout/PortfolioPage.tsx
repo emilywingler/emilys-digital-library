@@ -9,6 +9,7 @@ import { experience } from "@/content/experience";
 import { ExperienceFolder } from "@/components/experience/ExperienceFolder";
 import { skillCategories } from "@/content/skills";
 import { SkillsCatalog } from "@/components/skills/SkillsCatalog";
+import { ManuscriptProvider } from "@/components/manuscripts/ManuscriptProvider";
 import { SiteHeader } from "./SiteHeader";
 import { projects, shelfDecor } from "@/content/projects";
 import { ProjectLibrary } from "@/components/library/ProjectLibrary";
@@ -26,7 +27,7 @@ export function PortfolioPage() {
   useRevealOnce(main);
   useSectionMotion(main);
   return (
-    <>
+    <ManuscriptProvider>
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">
         Skip to content
       </a>
@@ -40,6 +41,6 @@ export function PortfolioPage() {
         <ContactBookmark links={contactLinks} />
       </main>
       <StarCursor />
-    </>
+    </ManuscriptProvider>
   );
 }

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Divider, Flourish } from "@/components/decor/Ornaments";
 import { useLocale } from "@/i18n/locale";
 import type { Profile } from "@/types/content";
+import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
 import { NewspaperMasthead } from "./NewspaperMasthead";
 import { NewspaperPortrait } from "./NewspaperPortrait";
 
@@ -26,6 +27,7 @@ export function HomeFrontPage({ profile, linkedInUrl }: Props) {
         <Flourish className="pointer-events-none absolute right-2 top-2 h-8 w-8 rotate-90 text-paper-muted/60" />
         <Flourish className="pointer-events-none absolute bottom-2 left-2 h-8 w-8 -rotate-90 text-paper-muted/60" />
         <Flourish className="pointer-events-none absolute bottom-2 right-2 h-8 w-8 rotate-180 text-paper-muted/60" />
+        <ManuscriptSpot section="home" />
 
         <NewspaperMasthead />
 

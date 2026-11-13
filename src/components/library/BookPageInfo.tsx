@@ -1,5 +1,6 @@
 import * as D from "@radix-ui/react-dialog";
 import { Fleuron } from "@/components/decor/Ornaments";
+import { BookManuscript } from "@/components/manuscripts/BookManuscript";
 import type { Locale, Project } from "@/types/content";
 import type { Messages } from "@/i18n/messages";
 
@@ -7,14 +8,14 @@ import type { Messages } from "@/i18n/messages";
 export function BookPageInfo({ project, locale, t }: { project: Project; locale: Locale; t: Messages["projects"] }) {
   const tech = project.technologies.map((x) => (typeof x === "string" ? x : x[locale]));
   return (
-    <div className="book-info flex h-full min-w-0 flex-col px-6 py-7 sm:px-8">
+    <div className="book-info relative flex h-full min-w-0 flex-col px-6 py-7 sm:px-8">
       <div className="book-running-head grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-3 font-masthead text-[0.7rem] uppercase tracking-[0.25em] text-paper-muted">
         <span className="min-w-0">{t.title}</span>
         <span className="shrink-0">{project.catalogNo}</span>
       </div>
       <D.Title className="mt-5 font-display text-3xl leading-tight text-paper-foreground">{project.title[locale]}</D.Title>
       <D.Description className="mt-2 font-display text-lg italic text-paper-muted">{project.intro[locale]}</D.Description>
-      <Fleuron className="my-4 h-3 w-3 text-paper-muted" />
+      <div className="relative my-4 h-3"><Fleuron className="h-3 w-3 text-paper-muted" /><BookManuscript projectId={project.id} /></div>
       <p className="text-sm leading-relaxed">{project.description[locale]}</p>
       <p className="mt-3 text-sm italic leading-relaxed text-paper-muted">{project.context[locale]}</p>
 

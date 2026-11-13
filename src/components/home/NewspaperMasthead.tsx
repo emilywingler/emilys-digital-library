@@ -1,4 +1,5 @@
 import { Fleuron } from "@/components/decor/Ornaments";
+import { manuscriptExtras } from "@/content/manuscripts";
 import { useLocale } from "@/i18n/locale";
 
 /**
@@ -22,6 +23,9 @@ export function NewspaperMasthead() {
       <p className="flex items-center justify-center gap-3 pt-3 font-display text-base italic text-paper-muted sm:text-lg">
         <Fleuron className="h-3 w-3" /> {t.home.lead} <Fleuron className="h-3 w-3" />
       </p>
+      <aside className="mx-auto mt-2 max-w-md text-xs italic leading-snug text-paper-muted" lang={locale === "pt" ? "pt-BR" : "en"}>
+        <span className="font-semibold">{manuscriptExtras.hint.title[locale]}</span> — {manuscriptExtras.hint.body[locale]}
+      </aside>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Github, Linkedin, Mail } from "lucide-react";
 import { Sprig, TwinStars } from "@/components/decor/Ornaments";
 import { Tassel } from "@/components/decor/Tassel";
+import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
 import { useLocale } from "@/i18n/locale";
 import type { ContactLink } from "@/types/content";
 
@@ -23,6 +24,7 @@ export function ContactBookmark({ links }: { links: ContactLink[] }) {
         </span>
         <div className="bookmark paper relative rounded-t-[1.5rem] px-6 pb-6 pt-12 md:rounded-l-[1.5rem] md:rounded-tr-none md:px-12 md:py-8">
           <span className="bookmark-hole" aria-hidden="true" />
+          <ManuscriptSpot section="contact" />
           <div className="pointer-events-none absolute inset-2 rounded-t-[1.1rem] border border-gold/60 md:rounded-l-[1.1rem] md:rounded-tr-none" aria-hidden="true" />
           <div className="relative grid items-center gap-6 text-center md:grid-cols-[auto_1fr_auto] md:gap-10 md:text-left">
             <div className="flex flex-col items-center gap-1 text-paper-muted">

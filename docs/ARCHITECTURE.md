@@ -61,3 +61,11 @@ Replace imports from `src/content` in `PortfolioPage` with a loader/query that r
 ## Section hand-offs
 - Sections carry `data-section`. `useSectionMotion` (mounted once in `PortfolioPage`) sets `main[data-motion]`: `css` when scroll-driven timelines + `CSS.registerProperty` exist (keyframes animate `--enter`/`--leave`), otherwise `js` (one passive rAF-batched listener writes the same variables). Reduced motion sets nothing → static.
 - One CSS block ("Section hand-offs") maps the variables per section; Projects is never transformed, only a decorative `::before` curtain fades (hidden below 600px). Intensity halves below 768px; `main` clips horizontal overflow.
+
+## The Lost Manuscripts
+
+- `src/content/manuscripts.ts` — seven manuscripts (verbatim author texts), the Home hint and final letter. UI labels live in `messages.ts` → `manuscripts`.
+- `ManuscriptProvider` — loads progress (`localStorage`, `wingler:lost-manuscripts`) and session placements (`sessionStorage`) after hydration, so SSR markup never differs. `discover()` records an id once; the seventh queues the letter, which opens once no project book is open.
+- `placement.ts` — `pickPlacements(list, found, rng, previous)` keeps valid session anchors and draws missing ones; anchors are unique, so markers never collide. All anchors are valid at every breakpoint, so resizing never reshuffles.
+- `ManuscriptSpot section=…` sits inside each section's `relative` container; `BookManuscript` renders Nº 05 beside the fleuron of one randomly chosen book, with an inline panel whose Escape is captured on `window` so the book stays open.
+- `ManuscriptLayer` — note dialog (focus returns to the section heading), bottom-left collection counter + overview, final letter.

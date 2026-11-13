@@ -31,3 +31,4 @@
 
 - [x] Add localized LinkedIn and Projects actions below the introduction using the existing contact URL and native section navigation.
 - [x] Verify desktop/mobile layout, keyboard focus, destination clearance, and reduced motion (PT/EN at 1478, 1024, 768, 598, 390, 360 px).
+- [x] Final milestone — The Lost Manuscripts easter egg

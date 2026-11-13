@@ -165,3 +165,28 @@ export interface JournalArticle {
 export type JournalSlot =
   | ({ kind: "article" } & JournalArticle)
   | { kind: "upcoming"; id: string };
+
+/** Section a hidden manuscript belongs to. */
+export type ManuscriptSection = "home" | "experience" | "skills" | "projects" | "book" | "journal" | "contact";
+/** Visual symbol of a manuscript marker (see `ManuscriptGlyphs`). */
+export type ManuscriptVariant = "note" | "quill" | "scroll" | "book" | "star" | "annotation" | "seal";
+
+/** One Lost Manuscript. Texts are the author's, verbatim. */
+export interface Manuscript {
+  id: string;
+  number: number;
+  section: ManuscriptSection;
+  variant: ManuscriptVariant;
+  /** Predefined safe anchor ids; one is chosen per browsing session. */
+  anchors: string[];
+  /** Italic opening line, also used as the title in the collection. */
+  title: LocalizedText;
+  paragraphs: LocalizedText[];
+  signature: LocalizedText;
+}
+
+/** Hint and final letter of the Lost Manuscripts. */
+export interface ManuscriptExtras {
+  hint: { title: LocalizedText; body: LocalizedText };
+  letter: { title: LocalizedText; paragraphs: LocalizedText[]; closing: LocalizedText; signature: string };
+}

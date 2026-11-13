@@ -1,6 +1,7 @@
 import { useState, type KeyboardEvent } from "react";
 import { Divider } from "@/components/decor/Ornaments";
 import { OrnateArrow } from "@/components/decor/OrnateArrow";
+import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
 import { useLocale } from "@/i18n/locale";
 import type { JournalSlot } from "@/types/content";
 import { JournalEntry } from "./JournalEntry";
@@ -27,7 +28,8 @@ export function WinglerJournal({ slots }: { slots: JournalSlot[] }) {
   };
   return (
     <section data-section="journal" id="journal" aria-labelledby="journal-heading" className="px-4 py-16 sm:px-6">
-      <div className="paper journal-sheet mx-auto max-w-5xl px-5 py-10 sm:px-10">
+      <div className="paper journal-sheet relative mx-auto max-w-5xl px-5 py-10 sm:px-10">
+        <ManuscriptSpot section="journal" />
         <header className="text-center">
           <p className="font-masthead text-xs uppercase tracking-[0.3em] text-paper-muted">{t.journal.kicker}</p>
           <h2 id="journal-heading" className="mt-2 font-masthead text-4xl sm:text-5xl">The Wingler Journal</h2>

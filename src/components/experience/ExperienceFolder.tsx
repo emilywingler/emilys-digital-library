@@ -1,4 +1,5 @@
 import { FolderTabs } from "@/components/folder/FolderTabs";
+import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
 import { useLocale } from "@/i18n/locale";
 import type { ExperienceEntry } from "@/types/content";
 
@@ -25,11 +26,12 @@ export function ExperienceFolder({ entries }: { entries: ExperienceEntry[] }) {
     ),
   }));
   return (
-    <section data-section="experience" id="experience" aria-labelledby="experience-title" className="mx-auto max-w-5xl px-3 py-12 sm:px-6">
+    <section data-section="experience" id="experience" aria-labelledby="experience-title" className="relative mx-auto max-w-5xl px-3 py-12 sm:px-6">
       <h2 id="experience-title" className="mb-4 font-display text-3xl italic text-foreground">
         <span className="block font-masthead text-xs not-italic uppercase tracking-[0.3em] text-primary">{t.experience.kicker}</span>
         {t.experience.title}
       </h2>
+      <ManuscriptSpot section="experience" />
       <FolderTabs items={items} label={t.experience.tabsLabel} hint={t.experience.hint} />
     </section>
   );
