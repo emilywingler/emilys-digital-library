@@ -78,3 +78,14 @@ Replace imports from `src/content` in `PortfolioPage` with a loader/query that r
 - `ManuscriptZone` renders markers whose resolved anchor belongs to its host. Hosts inside unmounted tabs or inactive (`inert`) slides simply wait; nothing moves.
 - `collision.ts` validates the full marker box (+4px) against text, images and focusable targets in its section/dialog, clipping containers, and collapsed hosts. A blocked anchor resolves through its `fallback` chain for the current width only.
 - `placement.ts` picks a host first, then a position, avoiding the previous exploration's host and anchor on replay. Placements are stored as version 2; older entries are redrawn without touching progress.
+
+## Admin panel (UI only)
+
+`/admin/*` is a management UI with mock data — no auth, persistence or uploads yet.
+
+- `src/admin/types.ts` — admin models built on `@/types/content`; `PublishStatus` is an admin label only.
+- `src/admin/data/seed.ts` — maps the real content in `src/content/` into admin models (no new copy).
+- `src/admin/data/store.ts` / `repository.ts` — in-memory `CollectionStore`/`DocStore` (immutable snapshots, queued mutations) behind the `AdminRepository` interface. A database implementation replaces `createMemoryRepository()`.
+- `src/admin/validation.ts` — limits (3 images, 2 links per project), published drawer needs a card, https links for published articles.
+- `src/admin/components/` — `AdminShell`, `CrudSection` (list/create/edit/confirmed delete/reorder), `DocEditor`, PT/EN `LocalizedField`, `ImagePathField`.
+- Theme tokens are scoped to `.admin-theme` in `src/styles.css`; the public site never imports admin data.

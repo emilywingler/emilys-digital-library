@@ -10,11 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as EnRouteImport } from './routes/en'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminExperiencesRouteImport } from './routes/admin.experiences'
+import { Route as AdminFooterRouteImport } from './routes/admin.footer'
+import { Route as AdminHomeRouteImport } from './routes/admin.home'
+import { Route as AdminJournalRouteImport } from './routes/admin.journal'
+import { Route as AdminManuscriptsRouteImport } from './routes/admin.manuscripts'
+import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
+import { Route as AdminSkillsRouteImport } from './routes/admin.skills'
+import { Route as AdminLoginRouteImport } from './routes/admin_.login'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnRoute = EnRouteImport.update({
@@ -22,31 +37,143 @@ const EnRoute = EnRouteImport.update({
   path: '/en',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminExperiencesRoute = AdminExperiencesRouteImport.update({
+  id: '/experiences',
+  path: '/experiences',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFooterRoute = AdminFooterRouteImport.update({
+  id: '/footer',
+  path: '/footer',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminHomeRoute = AdminHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminJournalRoute = AdminJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminManuscriptsRoute = AdminManuscriptsRouteImport.update({
+  id: '/manuscripts',
+  path: '/manuscripts',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProjectsRoute = AdminProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSkillsRoute = AdminSkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin_/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/en': typeof EnRoute
+  '/admin/experiences': typeof AdminExperiencesRoute
+  '/admin/footer': typeof AdminFooterRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/journal': typeof AdminJournalRoute
+  '/admin/manuscripts': typeof AdminManuscriptsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/skills': typeof AdminSkillsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/en': typeof EnRoute
+  '/admin/experiences': typeof AdminExperiencesRoute
+  '/admin/footer': typeof AdminFooterRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/journal': typeof AdminJournalRoute
+  '/admin/manuscripts': typeof AdminManuscriptsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/skills': typeof AdminSkillsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/en': typeof EnRoute
+  '/admin/experiences': typeof AdminExperiencesRoute
+  '/admin/footer': typeof AdminFooterRoute
+  '/admin/home': typeof AdminHomeRoute
+  '/admin/journal': typeof AdminJournalRoute
+  '/admin/manuscripts': typeof AdminManuscriptsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/skills': typeof AdminSkillsRoute
+  '/admin_/login': typeof AdminLoginRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/en'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/en'
+    | '/admin/experiences'
+    | '/admin/footer'
+    | '/admin/home'
+    | '/admin/journal'
+    | '/admin/manuscripts'
+    | '/admin/projects'
+    | '/admin/skills'
+    | '/admin/login'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/en'
-  id: '__root__' | '/' | '/en'
+  to:
+    | '/'
+    | '/en'
+    | '/admin/experiences'
+    | '/admin/footer'
+    | '/admin/home'
+    | '/admin/journal'
+    | '/admin/manuscripts'
+    | '/admin/projects'
+    | '/admin/skills'
+    | '/admin/login'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/en'
+    | '/admin/experiences'
+    | '/admin/footer'
+    | '/admin/home'
+    | '/admin/journal'
+    | '/admin/manuscripts'
+    | '/admin/projects'
+    | '/admin/skills'
+    | '/admin_/login'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   EnRoute: typeof EnRoute
+  AdminLoginRoute: typeof AdminLoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/en': {
       id: '/en'
       path: '/en'
@@ -65,12 +199,101 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/experiences': {
+      id: '/admin/experiences'
+      path: '/experiences'
+      fullPath: '/admin/experiences'
+      preLoaderRoute: typeof AdminExperiencesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/footer': {
+      id: '/admin/footer'
+      path: '/footer'
+      fullPath: '/admin/footer'
+      preLoaderRoute: typeof AdminFooterRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/home': {
+      id: '/admin/home'
+      path: '/home'
+      fullPath: '/admin/home'
+      preLoaderRoute: typeof AdminHomeRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/journal': {
+      id: '/admin/journal'
+      path: '/journal'
+      fullPath: '/admin/journal'
+      preLoaderRoute: typeof AdminJournalRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/manuscripts': {
+      id: '/admin/manuscripts'
+      path: '/manuscripts'
+      fullPath: '/admin/manuscripts'
+      preLoaderRoute: typeof AdminManuscriptsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/projects': {
+      id: '/admin/projects'
+      path: '/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AdminProjectsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/skills': {
+      id: '/admin/skills'
+      path: '/skills'
+      fullPath: '/admin/skills'
+      preLoaderRoute: typeof AdminSkillsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin_/login': {
+      id: '/admin_/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminExperiencesRoute: typeof AdminExperiencesRoute
+  AdminFooterRoute: typeof AdminFooterRoute
+  AdminHomeRoute: typeof AdminHomeRoute
+  AdminJournalRoute: typeof AdminJournalRoute
+  AdminManuscriptsRoute: typeof AdminManuscriptsRoute
+  AdminProjectsRoute: typeof AdminProjectsRoute
+  AdminSkillsRoute: typeof AdminSkillsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminExperiencesRoute: AdminExperiencesRoute,
+  AdminFooterRoute: AdminFooterRoute,
+  AdminHomeRoute: AdminHomeRoute,
+  AdminJournalRoute: AdminJournalRoute,
+  AdminManuscriptsRoute: AdminManuscriptsRoute,
+  AdminProjectsRoute: AdminProjectsRoute,
+  AdminSkillsRoute: AdminSkillsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   EnRoute: EnRoute,
+  AdminLoginRoute: AdminLoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
