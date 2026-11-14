@@ -177,8 +177,6 @@ export interface Manuscript {
   number: number;
   section: ManuscriptSection;
   variant: ManuscriptVariant;
-  /** Predefined safe anchor ids; one is chosen per browsing session. */
-  anchors: string[];
   /** Italic opening line, also used as the title in the collection. */
   title: LocalizedText;
   paragraphs: LocalizedText[];

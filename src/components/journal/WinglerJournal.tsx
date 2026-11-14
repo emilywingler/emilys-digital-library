@@ -1,7 +1,7 @@
 import { useState, type KeyboardEvent } from "react";
 import { Divider } from "@/components/decor/Ornaments";
 import { OrnateArrow } from "@/components/decor/OrnateArrow";
-import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
+import { ManuscriptZone } from "@/components/manuscripts/ManuscriptMarker";
 import { useLocale } from "@/i18n/locale";
 import type { JournalSlot } from "@/types/content";
 import { JournalEntry } from "./JournalEntry";
@@ -29,8 +29,9 @@ export function WinglerJournal({ slots }: { slots: JournalSlot[] }) {
   return (
     <section data-section="journal" id="journal" aria-labelledby="journal-heading" className="px-4 py-16 sm:px-6">
       <div className="paper journal-sheet relative mx-auto max-w-5xl px-5 py-10 sm:px-10">
-        <ManuscriptSpot section="journal" />
-        <header className="text-center">
+        <ManuscriptZone host="journal:sheet" />
+        <header className="relative text-center">
+          <ManuscriptZone host="journal:masthead" />
           <p className="font-masthead text-xs uppercase tracking-[0.3em] text-paper-muted">{t.journal.kicker}</p>
           <h2 id="journal-heading" className="mt-2 font-masthead text-4xl sm:text-5xl">The Wingler Journal</h2>
           <p className="mt-2 font-display italic text-paper-muted">{t.journal.lead}</p>
@@ -41,8 +42,9 @@ export function WinglerJournal({ slots }: { slots: JournalSlot[] }) {
             {slots.map((s, i) => {
               const active = i === index;
               return (
-                <div key={s.id} className="journal-slide" data-active={active} aria-hidden={!active} inert={!active}
+                <div key={s.id} className="journal-slide relative" data-active={active} aria-hidden={!active} inert={!active}
                   role="group" aria-roledescription="slide">
+                  <ManuscriptZone host={`journal:slot:${s.id}`} />
                   {s.kind === "article"
                     ? <JournalEntry article={s} locale={locale} labels={t.journal} feature />
                     : <UpcomingEntry title={t.journal.upcoming} note={t.journal.upcomingNote} />}

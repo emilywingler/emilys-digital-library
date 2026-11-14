@@ -1,4 +1,4 @@
-import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
+import { ManuscriptZone } from "@/components/manuscripts/ManuscriptMarker";
 import { useLocale } from "@/i18n/locale";
 import type { ExperienceEntry, SkillCategory } from "@/types/content";
 import { CardCatalog } from "./CardCatalog";
@@ -13,7 +13,7 @@ export function SkillsCatalog({ categories, experience }: { categories: SkillCat
         <span className="block font-masthead text-xs not-italic uppercase tracking-[0.3em] text-primary">{t.skills.kicker}</span>
         {t.skills.title}
       </h2>
-      <ManuscriptSpot section="skills" />
+      <ManuscriptZone host="skills:section" />
       <CardCatalog categories={categories} locale={locale} label={t.skills.drawersLabel}
         cardLabels={{ seeAlso: t.skills.seeAlso, levels: t.skills.levels }} experienceNames={experienceNames} />
     </section>

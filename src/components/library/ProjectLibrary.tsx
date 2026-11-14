@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
+import { ManuscriptZone } from "@/components/manuscripts/ManuscriptMarker";
 import { useLocale } from "@/i18n/locale";
 import type { Project, ShelfDecor } from "@/types/content";
 import { Bookshelf } from "./Bookshelf";
@@ -36,7 +36,7 @@ export function ProjectLibrary({ projects, decor }: { projects: Project[]; decor
         <span className="block font-masthead text-xs not-italic uppercase tracking-[0.3em] text-primary">{t.projects.kicker}</span>
         {t.projects.title}
       </h2>
-      <ManuscriptSpot section="projects" />
+      <ManuscriptZone host="projects:section" />
       <Bookshelf
         projects={projects} decor={decor} locale={locale} openLabel={t.projects.open}
         liftedId={liftedId} spineRefs={spineRefs}

@@ -41,7 +41,7 @@ export function ManuscriptLayer() {
           aria-label={tm.openCollection.replace("{n}", pad(count))} id="ms-counter">
           <ManuscriptGlyph variant="seal" className="h-4 w-4 shrink-0 text-gold" />
           <span className="flex min-w-0 flex-col text-left">
-            <span className="font-masthead text-[0.65rem] uppercase tracking-[0.2em] text-paper-muted">{tm.title} · <span className="whitespace-nowrap tabular-nums">{pad(count)}/07</span></span>
+            <span className="font-masthead text-[0.65rem] uppercase tracking-[0.2em] text-paper-muted">{tm.title}<span className="whitespace-nowrap tabular-nums"> · {pad(count)}/07</span></span>
             <span className="ms-counter-line font-display text-sm italic leading-tight">{count > 0 ? tm.lines[count - 1] : tm.title}</span>
           </span>
         </button>
@@ -65,7 +65,7 @@ export function ManuscriptLayer() {
         <D.Portal>
           <D.Overlay className="ms-overlay" />
           <D.Content className="ms-panel paper" aria-describedby="ms-progress" onCloseAutoFocus={(e) => e.preventDefault()}>
-            <D.Title className="font-display text-2xl italic">{tm.collection}</D.Title>
+            <D.Title className="ms-title pr-8 font-display text-2xl italic leading-tight">{tm.collection}</D.Title>
             <p id="ms-progress" className="mt-1 font-masthead text-xs uppercase tracking-[0.2em] text-paper-muted">{tm.progress.replace("{n}", pad(count))}</p>
             <ol className="mt-4 divide-y divide-rule border-y border-rule">
               {manuscripts.map((m) => {
@@ -73,10 +73,10 @@ export function ManuscriptLayer() {
                 return (
                   <li key={m.id} className="flex min-h-11 items-center gap-3 py-1.5" data-found={has}>
                     <ManuscriptGlyph variant={m.variant} className={has ? "h-4 w-4 shrink-0 text-gold" : "h-4 w-4 shrink-0 text-paper-muted/40"} />
-                    <span className="font-masthead text-xs tracking-[0.15em] text-paper-muted">{formatNo(m.number, tm)}</span>
+                    <span className="shrink-0 whitespace-nowrap font-masthead text-xs tracking-[0.15em] text-paper-muted">{formatNo(m.number, tm)}</span>
                     {has
-                      ? <span className="font-display italic">{m.title[locale]}</span>
-                      : <span className="text-sm italic text-paper-muted/70">{tm.stillLost}</span>}
+                      ? <span className="ms-title min-w-0 flex-1 font-display italic leading-snug">{m.title[locale]}</span>
+                      : <span className="min-w-0 flex-1 text-sm italic text-paper-muted/70">{tm.stillLost}</span>}
                   </li>
                 );
               })}
@@ -86,7 +86,7 @@ export function ManuscriptLayer() {
                 <button type="button" className="min-h-11 font-display italic underline decoration-gold underline-offset-4" onClick={() => setDialog({ kind: "letter" })}>{tm.reread}</button>
               )}
               {count > 0 && !confirming && (
-                <button type="button" className="ms-replay min-h-11 font-masthead text-xs uppercase tracking-[0.18em] text-paper-muted hover:text-paper-foreground" onClick={() => setConfirming(true)}>
+                <button type="button" className="ms-replay min-h-11 text-left font-masthead text-xs uppercase tracking-[0.18em] text-paper-muted hover:text-paper-foreground" onClick={() => setConfirming(true)}>
                   {complete ? tm.playAgain : tm.restart}
                 </button>
               )}
@@ -95,9 +95,9 @@ export function ManuscriptLayer() {
               <div role="alertdialog" aria-modal="false" aria-labelledby="ms-confirm-title" aria-describedby="ms-confirm-body" className="ms-confirm mt-3 border border-gold/60 p-4">
                 <p id="ms-confirm-title" className="font-display text-lg italic">{tm.confirmTitle}</p>
                 <p id="ms-confirm-body" className="mt-1 text-sm leading-relaxed">{tm.confirmBody}</p>
-                <div className="mt-3 flex justify-end gap-4">
+                <div className="mt-3 flex flex-wrap justify-end gap-x-4 gap-y-2">
                   <button type="button" data-cancel className="min-h-11 px-2 text-sm italic underline underline-offset-4" onClick={() => setConfirming(false)}>{tm.cancel}</button>
-                  <button type="button" className="min-h-11 border border-gold px-3 font-masthead text-xs uppercase tracking-[0.18em]"
+                  <button type="button" className="min-h-11 border border-gold px-3 py-1 text-balance font-masthead text-xs uppercase tracking-[0.18em]"
                     onClick={() => { setConfirming(false); restart(); setTimeout(() => focusStable("ms-counter"), 0); }}>{tm.confirm}</button>
                 </div>
               </div>
@@ -113,7 +113,7 @@ export function ManuscriptLayer() {
           <D.Content className="ms-panel ms-letter paper" aria-describedby={undefined} onCloseAutoFocus={(e) => e.preventDefault()}>
             <div lang={locale === "pt" ? "pt-BR" : "en"}>
               <ManuscriptGlyph variant="seal" className="mx-auto h-6 w-6 text-gold" />
-              <D.Title className="mt-3 text-center font-display text-3xl italic leading-tight">{L.title[locale]}</D.Title>
+              <D.Title className="ms-title mt-3 px-6 text-center font-display text-3xl italic leading-tight">{L.title[locale]}</D.Title>
               <div className="mx-auto mt-3 h-px w-24 bg-gold/60" aria-hidden="true" />
               {L.paragraphs.map((p) => <p key={p.en} className="mt-4 leading-relaxed">{p[locale]}</p>)}
               <p className="mt-6 font-display italic">{L.closing[locale]}</p>

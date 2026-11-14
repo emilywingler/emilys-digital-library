@@ -4,11 +4,14 @@ import { describe, expect, it, beforeEach } from "vitest";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { manuscripts, manuscriptExtras } from "@/content/manuscripts";
 import { parsePlacements, parseProgress, safeStore, serializePlacements, serializeProgress, PROGRESS_KEY } from "@/components/manuscripts/manuscriptStorage";
-import { ANCHOR_CLASS, pickPlacements } from "@/components/manuscripts/placement";
+import { pickPlacements, pickReplayPlacements } from "@/components/manuscripts/placement";
+import { ANCHORS as DEFS, ANCHORS_BY_ID, MANUSCRIPT_ANCHORS, hostOf, hostsOf } from "@/components/manuscripts/anchors";
+import { checkMarker } from "@/components/manuscripts/collision";
 import { messages } from "@/i18n/messages";
 
 const IDS = manuscripts.map((m) => m.id);
-const ANCHORS = Object.fromEntries(manuscripts.map((m) => [m.id, m.anchors]));
+const ANCHORS = ANCHORS_BY_ID;
+const LIST = MANUSCRIPT_ANCHORS;
 const seeded = (seed: number) => () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
 
 describe("Lost Manuscripts content", () => {
@@ -23,10 +26,21 @@ describe("Lost Manuscripts content", () => {
     expect(messages.pt.manuscripts.lines).toHaveLength(7);
     expect(messages.en.manuscripts.lines).toHaveLength(7);
   });
-  it("every page anchor has a position, no anchor is shared", () => {
-    const all = manuscripts.flatMap((m) => m.anchors);
+  it("every anchor is registered, unique, and each fallback is a trusted spot of the same section", () => {
+    const all = LIST.flatMap((m) => m.anchors);
     expect(new Set(all).size).toBe(all.length);
-    for (const a of all) if (!a.startsWith("book:")) expect(ANCHOR_CLASS[a]).toBeTruthy();
+    for (const a of all) {
+      expect(DEFS[a]?.cls).toBeTruthy();
+      let cur = a, hops = 0;
+      while (DEFS[cur]!.fallback && hops++ < 4) { const fb = DEFS[cur]!.fallback!; expect(DEFS[fb]!.section).toBe(DEFS[a]!.section); cur = fb; }
+      expect(DEFS[cur]!.fallback).toBeUndefined(); // every chain ends in a trusted spot
+    }
+  });
+  it("each manuscript has many hiding places across several components", () => {
+    for (const m of LIST) {
+      expect(m.anchors.length).toBeGreaterThanOrEqual(6);
+      expect(new Set(m.anchors.map(hostOf)).size).toBeGreaterThanOrEqual(3);
+    }
   });
 });
 
@@ -35,7 +49,8 @@ describe("storage", () => {
     expect(parseProgress(JSON.stringify({ version: 1, found: ["journey", "journey", "nope", 3] }), IDS)).toEqual({ found: ["journey"] });
     expect(parseProgress(JSON.stringify({ version: 0, found: ["journey"] }), IDS)).toEqual({ found: [] });
     expect(parseProgress("{broken", IDS)).toEqual({ found: [] });
-    expect(parsePlacements(JSON.stringify({ version: 1, placements: { journey: "home-bl", "small-pause": "home-br" } }), ANCHORS)).toEqual({ "small-pause": "home-br" });
+    expect(parsePlacements(JSON.stringify({ version: 2, placements: { journey: "home:page@bl", "small-pause": "home:page@br" } }), ANCHORS)).toEqual({ "small-pause": "home:page@br" });
+    expect(parsePlacements(JSON.stringify({ version: 1, placements: { "small-pause": "home-br" } }), ANCHORS)).toEqual({});
   });
   it("round-trips completion only when all seven are found", () => {
     expect(parseProgress(serializeProgress({ found: IDS, completedAt: "x" }), IDS).completedAt).toBe("x");
@@ -52,7 +67,7 @@ describe("storage", () => {
 describe("placement", () => {
   it("gives every undiscovered manuscript a valid, unique anchor and skips found ones", () => {
     for (let seed = 1; seed < 50; seed++) {
-      const p = pickPlacements(manuscripts, new Set(["journey"]), seeded(seed));
+      const p = pickPlacements(LIST, new Set(["journey"]), seeded(seed));
       expect(p["journey"]).toBeUndefined();
       expect(Object.keys(p)).toHaveLength(6);
       for (const [id, a] of Object.entries(p)) expect(ANCHORS[id]).toContain(a);
@@ -60,10 +75,14 @@ describe("placement", () => {
     }
   });
   it("reuses the session placement and varies across sessions", () => {
-    const first = pickPlacements(manuscripts, new Set(), seeded(7));
-    expect(pickPlacements(manuscripts, new Set(), seeded(99), parsePlacements(serializePlacements(first), ANCHORS))).toEqual(first);
-    const variants = new Set(Array.from({ length: 20 }, (_, i) => JSON.stringify(pickPlacements(manuscripts, new Set(), seeded(i + 1)))));
-    expect(variants.size).toBeGreaterThan(1);
+    const first = pickPlacements(LIST, new Set(), seeded(7));
+    expect(pickPlacements(LIST, new Set(), seeded(99), parsePlacements(serializePlacements(first), ANCHORS))).toEqual(first);
+    const variants = new Set(Array.from({ length: 20 }, (_, i) => JSON.stringify(pickPlacements(LIST, new Set(), seeded(i + 1)))));
+    expect(variants.size).toBe(20);
+    for (const m of LIST) {
+      const hosts = new Set(Array.from({ length: 40 }, (_, i) => hostOf(pickPlacements(LIST, new Set(), seeded(7919 * (i + 1)))[m.id]!)));
+      expect(hosts.size).toBeGreaterThanOrEqual(3);
+    }
   });
 });
 
@@ -71,9 +90,9 @@ describe("provider flow", () => {
   beforeEach(() => { localStorage.clear(); sessionStorage.clear(); });
   it("counter hidden before first find, counts once, letter opens on the seventh", async () => {
     const { ManuscriptProvider } = await import("@/components/manuscripts/ManuscriptProvider");
-    const { ManuscriptSpot } = await import("@/components/manuscripts/ManuscriptMarker");
+    const { ManuscriptZone } = await import("@/components/manuscripts/ManuscriptMarker");
     localStorage.setItem(PROGRESS_KEY, serializeProgress({ found: IDS.filter((id) => id !== "small-pause") }));
-    render(<ManuscriptProvider><div className="relative"><ManuscriptSpot section="home" /></div></ManuscriptProvider>);
+    render(<ManuscriptProvider><div className="relative">{hostsOf("home").map((h) => <ManuscriptZone key={h} host={h} />)}</div></ManuscriptProvider>);
     expect(screen.getByRole("button", { name: /06 of 07 found/ })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Lost manuscript No. 01" }));
     expect(screen.getByText("A little pause.")).toBeInTheDocument();
@@ -88,11 +107,10 @@ describe("provider flow", () => {
 describe("replay", () => {
   beforeEach(() => { localStorage.clear(); sessionStorage.clear(); });
   it("replay arrangement always differs when an alternative exists", async () => {
-    const { pickReplayPlacements } = await import("@/components/manuscripts/placement");
     for (let seed = 1; seed < 60; seed++) {
-      const prev = pickPlacements(manuscripts, new Set(), seeded(seed));
-      const next = pickReplayPlacements(manuscripts, () => 0, prev); // worst case: rng repeats
-      expect(manuscripts.some((m) => next[m.id] !== prev[m.id])).toBe(true);
+      const prev = pickPlacements(LIST, new Set(), seeded(seed));
+      const next = pickReplayPlacements(LIST, () => 0, prev); // worst case: rng repeats
+      for (const m of LIST) { expect(next[m.id]).not.toBe(prev[m.id]); expect(hostOf(next[m.id]!)).not.toBe(hostOf(prev[m.id]!)); }
       expect(Object.keys(next)).toHaveLength(7);
       expect(new Set(Object.values(next)).size).toBe(7);
     }
@@ -100,9 +118,9 @@ describe("replay", () => {
 
   async function setup(found: string[]) {
     const { ManuscriptProvider } = await import("@/components/manuscripts/ManuscriptProvider");
-    const { ManuscriptSpot } = await import("@/components/manuscripts/ManuscriptMarker");
+    const { ManuscriptZone } = await import("@/components/manuscripts/ManuscriptMarker");
     localStorage.setItem(PROGRESS_KEY, serializeProgress(found.length === 7 ? { found, completedAt: "x" } : { found }));
-    render(<ManuscriptProvider><div className="relative"><ManuscriptSpot section="home" /></div></ManuscriptProvider>);
+    render(<ManuscriptProvider><div className="relative">{hostsOf("home").map((h) => <ManuscriptZone key={h} host={h} />)}</div></ManuscriptProvider>);
   }
   const restartVia = (label: RegExp) => {
     fireEvent.click(screen.getByRole("button", { name: /Open manuscript collection/ }));
@@ -145,5 +163,61 @@ describe("replay", () => {
     fireEvent.click(screen.getByRole("button", { name: "Lost manuscript No. 01" }));
     await act(() => new Promise((r) => setTimeout(r, 350)));
     expect(screen.getByText("To the one who made it this far.")).toBeInTheDocument();
+  });
+});
+
+describe("zones and collision", () => {
+  beforeEach(() => { localStorage.clear(); sessionStorage.clear(); });
+  const rect = (l: number, t: number, w: number, h: number) => ({ left: l, top: t, right: l + w, bottom: t + h, width: w, height: h, x: l, y: t, toJSON() {} }) as DOMRect;
+
+  it("a manuscript in a closed Experience tab keeps its tab and appears when that tab opens", async () => {
+    const { ManuscriptProvider } = await import("@/components/manuscripts/ManuscriptProvider");
+    const { ManuscriptZone } = await import("@/components/manuscripts/ManuscriptMarker");
+    const { experience } = await import("@/content/experience");
+    const host = `experience:${experience[1]!.id}`;
+    sessionStorage.setItem("wingler:lost-manuscripts:session", serializePlacements({ beginning: `${host}@br` }));
+    const View = ({ tab }: { tab: number }) => <ManuscriptProvider><div className="relative"><ManuscriptZone host="experience:section" />{tab === 1 && <article className="relative"><ManuscriptZone host={host} /></article>}</div></ManuscriptProvider>;
+    const { rerender } = render(<View tab={0} />);
+    expect(screen.queryByRole("button", { name: "Lost manuscript No. 02" })).toBeNull(); // no premature fallback
+    rerender(<View tab={1} />);
+    expect(screen.getByRole("button", { name: "Lost manuscript No. 02" }).dataset["anchor"]).toBe(`${host}@br`);
+    expect(JSON.parse(sessionStorage.getItem("wingler:lost-manuscripts:session")!).placements.beginning).toBe(`${host}@br`);
+  });
+
+  it("a marker on an inactive journal slide is 'hidden' (not blocked) and checked again when active", () => {
+    document.body.innerHTML = '<section data-section="journal"><div class="slide" inert><div class="relative"><button class="ms-marker">x</button></div></div></section>';
+    const btn = document.querySelector<HTMLElement>(".ms-marker")!;
+    expect(checkMarker(btn)).toBe("hidden");
+    document.querySelector(".slide")!.removeAttribute("inert");
+    btn.getBoundingClientRect = () => rect(0, 0, 44, 44);
+    btn.parentElement!.getBoundingClientRect = () => rect(0, 0, 300, 300);
+    expect(checkMarker(btn)).toBe("ok");
+  });
+
+  it("blocks partial overlaps with text, images and controls, including the safety margin", () => {
+    document.body.innerHTML = '<section data-section="x"><div class="relative"><button class="ms-marker">x</button><a href="#">link</a><img alt="shot"></div></section>';
+    const btn = document.querySelector<HTMLElement>(".ms-marker")!;
+    btn.getBoundingClientRect = () => rect(100, 100, 44, 44);
+    btn.parentElement!.getBoundingClientRect = () => rect(0, 0, 400, 400);
+    const a = document.querySelector("a")!, img = document.querySelector("img")!;
+    a.getClientRects = () => [rect(146, 140, 50, 20)] as unknown as DOMRectList; // 2px gap: inside margin
+    img.getClientRects = () => [] as unknown as DOMRectList;
+    expect(checkMarker(btn)).toBe("blocked");
+    a.getClientRects = () => [rect(160, 140, 50, 20)] as unknown as DOMRectList;
+    img.getClientRects = () => [rect(130, 50, 60, 60)] as unknown as DOMRectList; // corner overlap only
+    expect(checkMarker(btn)).toBe("blocked");
+    img.getClientRects = () => [rect(300, 300, 60, 60)] as unknown as DOMRectList;
+    expect(checkMarker(btn)).toBe("ok");
+  });
+
+  it("replay after replay keeps moving every manuscript to a valid, unique spot", () => {
+    let prev = pickPlacements(LIST, new Set(), seeded(5));
+    const rng = seeded(11);
+    for (let i = 0; i < 25; i++) {
+      const next = pickReplayPlacements(LIST, rng, prev);
+      for (const m of LIST) { expect(ANCHORS[m.id]).toContain(next[m.id]); expect(next[m.id]).not.toBe(prev[m.id]); }
+      expect(new Set(Object.values(next)).size).toBe(7);
+      prev = next;
+    }
   });
 });

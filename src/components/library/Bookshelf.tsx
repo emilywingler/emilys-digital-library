@@ -1,5 +1,6 @@
 import type { RefObject } from "react";
 import type { Locale, Project, ShelfDecor } from "@/types/content";
+import { ManuscriptZone } from "@/components/manuscripts/ManuscriptMarker";
 import { BookSpine } from "./BookSpine";
 import { DecorItem } from "./DecorItem";
 
@@ -23,7 +24,8 @@ type Slot = { order: number } & ({ project: Project } | { decor: ShelfDecor });
 export function Bookshelf({ projects, decor, locale, openLabel, liftedId, spineRefs, onOpen, onPreload }: Props) {
   const shelves = ([1, 2, 3] as const).filter((n) => projects.some((p) => p.shelf === n) || decor.some((d) => d.shelf === n));
   return (
-    <div className="bookshelf-cabinet mx-auto max-w-3xl px-3 pb-3 pt-4 sm:px-6">
+    <div className="bookshelf-cabinet relative mx-auto max-w-3xl px-3 pb-3 pt-4 sm:px-6">
+      <ManuscriptZone host="projects:cabinet" />
       {shelves.map((n) => {
         const slots: Slot[] = [
           ...projects.filter((p) => p.shelf === n).map((p) => ({ order: p.order, project: p })),
@@ -51,8 +53,10 @@ export function Bookshelf({ projects, decor, locale, openLabel, liftedId, spineR
                     />
                   </li>
                 ) : (
-                  <li key={s.decor.id} aria-hidden="true" className={`flex ${s.decor.kind === "book" ? "shelf-decor-book" : "shelf-decor-object"}`}>
-                    <DecorItem item={s.decor} />
+                  // role="none": the decor stays hidden from assistive tech, while a manuscript hidden on it stays reachable.
+                  <li key={s.decor.id} role="none" className={`relative flex ${s.decor.kind === "book" ? "shelf-decor-book" : "shelf-decor-object"}`}>
+                    <span aria-hidden="true" className="flex"><DecorItem item={s.decor} /></span>
+                    {s.decor.kind === "book" && <ManuscriptZone host={`projects:decor:${s.decor.id}`} />}
                   </li>
                 ),
               ])}

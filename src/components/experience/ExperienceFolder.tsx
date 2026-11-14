@@ -1,5 +1,5 @@
 import { FolderTabs } from "@/components/folder/FolderTabs";
-import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
+import { ManuscriptZone } from "@/components/manuscripts/ManuscriptMarker";
 import { useLocale } from "@/i18n/locale";
 import type { ExperienceEntry } from "@/types/content";
 
@@ -11,7 +11,8 @@ export function ExperienceFolder({ entries }: { entries: ExperienceEntry[] }) {
     index: `Nº ${String(i + 1).padStart(2, "0")} //`,
     label: e.tab[locale],
     content: (
-      <article lang={locale === "pt" ? "pt-BR" : "en"}>
+      <article className="relative" lang={locale === "pt" ? "pt-BR" : "en"}>
+        <ManuscriptZone host={`experience:${e.id}`} />
         <p className="text-xs uppercase tracking-[0.2em] text-paper-muted">
           {e.period[locale]}{e.kind === "education" && ` · ${t.experience.education}`}
         </p>
@@ -31,7 +32,7 @@ export function ExperienceFolder({ entries }: { entries: ExperienceEntry[] }) {
         <span className="block font-masthead text-xs not-italic uppercase tracking-[0.3em] text-primary">{t.experience.kicker}</span>
         {t.experience.title}
       </h2>
-      <ManuscriptSpot section="experience" />
+      <ManuscriptZone host="experience:section" />
       <FolderTabs items={items} label={t.experience.tabsLabel} hint={t.experience.hint} />
     </section>
   );

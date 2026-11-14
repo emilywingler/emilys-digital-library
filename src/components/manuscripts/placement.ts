@@ -1,20 +1,6 @@
-import type { Manuscript, ManuscriptSection } from "@/types/content";
+import type { ManuscriptSection } from "@/types/content";
+import { hostOf } from "./anchors";
 import type { Placements } from "./manuscriptStorage";
-
-/**
- * Safe page anchors: absolute positions inside an existing `relative` section
- * container, always in empty padding/corners (never over text or controls).
- * Every anchor is valid at every breakpoint, so a viewport change never needs
- * a reshuffle. `book:*` anchors are rendered by `BookManuscript` instead.
- */
-export const ANCHOR_CLASS: Record<string, string> = {
-  "home-bl": "left-10 bottom-0", "home-br": "right-10 bottom-0",
-  "experience-tr": "right-3 top-2", "experience-br": "right-3 bottom-0",
-  "skills-tr": "right-3 top-2", "skills-bl": "left-0 bottom-0",
-  "projects-tr": "right-3 top-2", "projects-bl": "left-0 bottom-0",
-  "journal-tl": "left-3 top-3", "journal-tr": "right-3 top-3",
-  "contact-tr": "right-3 top-2", "contact-br": "right-3 bottom-1",
-};
 
 /** Heading that receives focus when a section's note closes (the marker is gone by then). */
 export const SECTION_HEADING: Record<ManuscriptSection, string> = {
@@ -22,12 +8,17 @@ export const SECTION_HEADING: Record<ManuscriptSection, string> = {
   book: "projects-title", journal: "journal-heading", contact: "contact-title",
 };
 
+type Entry = { id: string; anchors: readonly string[] };
+const pick = <T,>(xs: readonly T[], rng: () => number) => xs[Math.min(xs.length - 1, Math.floor(rng() * xs.length))]!;
+
 /**
- * One anchor per undiscovered manuscript. Valid previous choices are kept (stable
- * within a session); missing/invalid ones are drawn with the injected `rng`.
- * Anchors are never shared between manuscripts, so markers cannot collide.
+ * One anchor per undiscovered manuscript. Valid `previous` choices are kept
+ * (stable within a session). New choices draw a *host* first, then a position
+ * in it, so variation spreads across components instead of corners of one
+ * box. `avoid` (the last exploration) is excluded whenever an alternative
+ * exists: first its host, then its exact anchor. Anchors are never shared.
  */
-export function pickPlacements(list: readonly Manuscript[], found: ReadonlySet<string>, rng: () => number, previous: Placements = {}): Placements {
+export function pickPlacements(list: readonly Entry[], found: ReadonlySet<string>, rng: () => number, previous: Placements = {}, avoid: Placements = {}): Placements {
   const out: Placements = {};
   const used = new Set<string>();
   for (const m of list) {
@@ -36,25 +27,18 @@ export function pickPlacements(list: readonly Manuscript[], found: ReadonlySet<s
     if (prev && m.anchors.includes(prev) && !used.has(prev)) { out[m.id] = prev; used.add(prev); continue; }
     const free = m.anchors.filter((a) => !used.has(a));
     if (!free.length) continue;
-    const pick = free[Math.min(free.length - 1, Math.floor(rng() * free.length))]!;
-    out[m.id] = pick; used.add(pick);
+    const old = avoid[m.id];
+    const otherHost = old ? free.filter((a) => hostOf(a) !== hostOf(old)) : free;
+    const otherAnchor = old ? free.filter((a) => a !== old) : free;
+    const pool = otherHost.length ? otherHost : otherAnchor.length ? otherAnchor : free;
+    const host = pick([...new Set(pool.map(hostOf))], rng);
+    const choice = pick(pool.filter((a) => hostOf(a) === host), rng);
+    out[m.id] = choice; used.add(choice);
   }
   return out;
 }
 
-/**
- * Fresh arrangement for a replay: draws new placements and, if every manuscript
- * landed on its previous anchor, moves the first one that has a free alternative.
- */
-export function pickReplayPlacements(list: readonly Manuscript[], rng: () => number, previous: Placements): Placements {
-  const differs = (p: Placements) => list.some((m) => p[m.id] && previous[m.id] && p[m.id] !== previous[m.id]);
-  let next = pickPlacements(list, new Set(), rng);
-  for (let i = 0; i < 8 && !differs(next); i++) next = pickPlacements(list, new Set(), rng);
-  if (differs(next)) return next;
-  const used = new Set(Object.values(next));
-  for (const m of list) {
-    const alt = m.anchors.find((a) => a !== next[m.id] && !used.has(a));
-    if (alt && previous[m.id]) return { ...next, [m.id]: alt };
-  }
-  return next; // no valid alternative exists
+/** Fresh arrangement for a replay: every manuscript moves (host first, then anchor) whenever it can. */
+export function pickReplayPlacements(list: readonly Entry[], rng: () => number, previous: Placements): Placements {
+  return pickPlacements(list, new Set(), rng, {}, previous);
 }

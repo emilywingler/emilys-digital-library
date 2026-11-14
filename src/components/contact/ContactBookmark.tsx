@@ -1,7 +1,7 @@
 import { Github, Linkedin, Mail } from "lucide-react";
 import { Sprig, TwinStars } from "@/components/decor/Ornaments";
 import { Tassel } from "@/components/decor/Tassel";
-import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
+import { ManuscriptZone } from "@/components/manuscripts/ManuscriptMarker";
 import { useLocale } from "@/i18n/locale";
 import type { ContactLink } from "@/types/content";
 
@@ -17,6 +17,7 @@ export function ContactBookmark({ links }: { links: ContactLink[] }) {
   return (
     <footer data-section="contact" id="contact" aria-labelledby="contact-title" className="px-4 pb-14 pt-10 sm:px-6">
       <div className="bookmark-wrap relative mx-auto max-w-sm md:max-w-4xl">
+        <ManuscriptZone host="contact:wrap" />
         <span className="bookmark-cord-anchor" aria-hidden="true">
           <span className="bookmark-cord-reveal" data-reveal>
             <Tassel className="tassel-sway text-gold" />
@@ -24,10 +25,11 @@ export function ContactBookmark({ links }: { links: ContactLink[] }) {
         </span>
         <div className="bookmark paper relative rounded-t-[1.5rem] px-6 pb-6 pt-12 md:rounded-l-[1.5rem] md:rounded-tr-none md:px-12 md:py-8">
           <span className="bookmark-hole" aria-hidden="true" />
-          <ManuscriptSpot section="contact" />
+          <ManuscriptZone host="contact:bookmark" />
           <div className="pointer-events-none absolute inset-2 rounded-t-[1.1rem] border border-gold/60 md:rounded-l-[1.1rem] md:rounded-tr-none" aria-hidden="true" />
           <div className="relative grid items-center gap-6 text-center md:grid-cols-[auto_1fr_auto] md:gap-10 md:text-left">
-            <div className="flex flex-col items-center gap-1 text-paper-muted">
+            <div className="relative flex flex-col items-center gap-1 text-paper-muted">
+              <ManuscriptZone host="contact:monogram" />
               <TwinStars className="h-6 w-6 text-gold" />
               <span className="font-display text-6xl leading-none text-paper-foreground" aria-hidden="true">E</span>
               <Sprig className="h-4 w-20" />

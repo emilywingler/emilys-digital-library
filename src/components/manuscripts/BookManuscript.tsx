@@ -1,21 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
-import { manuscripts } from "@/content/manuscripts";
-import { ManuscriptGlyph } from "@/components/decor/ManuscriptGlyphs";
+import type { Manuscript } from "@/types/content";
 import { useLocale } from "@/i18n/locale";
 import { useManuscripts } from "./ManuscriptProvider";
-import { ManuscriptNoteBody, formatNo } from "./ManuscriptNoteBody";
-
-const M = manuscripts.find((m) => m.section === "book")!;
+import { ManuscriptNoteBody } from "./ManuscriptNoteBody";
+import { MarkerButton } from "./ManuscriptMarker";
 
 /**
- * Nº 05 inside an opened book, beside the info-page fleuron. Its note is an
+ * Nº 05 inside an opened book (fleuron, info page or media page). Its note is an
  * inline, non-modal parchment panel inside the book's own dialog: Escape is
  * captured on window (before Radix's document listener) so it closes only the
  * note, and focus returns to the book's close button.
  */
-export function BookManuscript({ projectId }: { projectId: string }) {
-  const { ready, found, placements, discover, queueLetter } = useManuscripts();
+export function BookManuscriptPanel({ m: M, anchor }: { m: Manuscript; anchor: string }) {
+  const { discover, queueLetter, found } = useManuscripts();
   const { locale, t } = useLocale();
   const [open, setOpen] = useState<{ fresh: boolean } | null>(null);
   const panel = useRef<HTMLDivElement>(null);
@@ -39,16 +37,9 @@ export function BookManuscript({ projectId }: { projectId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  const visible = ready && !found.has(M.id) && placements[M.id] === `book:${projectId}`;
   return (
     <span ref={host}>
-      {visible && (
-        <button type="button" data-manuscript={M.id} className="ms-marker ms-marker-book"
-          aria-label={t.manuscripts.marker.replace("{no}", formatNo(M.number, t.manuscripts))}
-          onClick={() => { const done = discover(M.id); setOpen({ fresh: true }); if (done) queueLetter(); }}>
-          <ManuscriptGlyph variant={M.variant} />
-        </button>
-      )}
+      {!found.has(M.id) && <MarkerButton m={M} anchor={anchor} onActivate={() => { const done = discover(M.id); setOpen({ fresh: true }); if (done) queueLetter(); }} />}
       {open && (
         <div ref={panel} tabIndex={-1} role="group" aria-labelledby="ms-book-title" className="ms-book-panel paper">
           <button type="button" onClick={close} aria-label={t.manuscripts.close} className="ms-close"><X className="h-4 w-4" aria-hidden="true" /></button>

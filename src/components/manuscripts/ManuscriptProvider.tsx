@@ -5,10 +5,10 @@ import {
   type Placements,
 } from "./manuscriptStorage";
 import { pickPlacements, pickReplayPlacements } from "./placement";
+import { ANCHORS as ANCHOR_DEFS, ANCHORS_BY_ID, MANUSCRIPT_ANCHORS } from "./anchors";
 import { ManuscriptLayer } from "./ManuscriptLayer";
 
 const IDS = manuscripts.map((m) => m.id);
-const ANCHORS = Object.fromEntries(manuscripts.map((m) => [m.id, m.anchors]));
 const local = safeStore(() => (typeof window === "undefined" ? undefined : window.localStorage));
 const session = safeStore(() => (typeof window === "undefined" ? undefined : window.sessionStorage));
 
@@ -29,9 +29,13 @@ interface Ctx {
   replayed: boolean;
   /** Clears progress, draws a new arrangement and closes any panel. */
   restart: () => void;
+  /** Anchor actually rendered for a manuscript: its placement, or a fallback if that one is blocked. */
+  resolve: (id: string) => string | undefined;
+  /** Marks an anchor unusable for now (overlap / collapsed host). Stored placement and progress stay. */
+  block: (anchor: string) => void;
 }
 
-const INERT: Ctx = { ready: false, found: new Set(), placements: {}, dialog: null, setDialog: () => {}, discover: () => false, queueLetter: () => {}, replayed: false, restart: () => {} };
+const INERT: Ctx = { ready: false, found: new Set(), placements: {}, dialog: null, setDialog: () => {}, discover: () => false, queueLetter: () => {}, replayed: false, restart: () => {}, resolve: () => undefined, block: () => {} };
 
 const ManuscriptContext = createContext<Ctx | null>(null);
 
@@ -57,8 +61,8 @@ export function ManuscriptProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const progress = parseProgress(local.read(PROGRESS_KEY), IDS);
     const f = new Set(progress.found);
-    const prev = parsePlacements(session.read(SESSION_KEY), ANCHORS);
-    const next = pickPlacements(manuscripts, f, Math.random, prev);
+    const prev = parsePlacements(session.read(SESSION_KEY), ANCHORS_BY_ID);
+    const next = pickPlacements(MANUSCRIPT_ANCHORS, f, Math.random, prev);
     session.write(SESSION_KEY, serializePlacements(next));
     setFound(f); setCompletedAt(progress.completedAt); setPlacements(next); setReady(true);
   }, []);
@@ -77,14 +81,31 @@ export function ManuscriptProvider({ children }: { children: ReactNode }) {
   }, [completedAt]);
 
   const restart = useCallback(() => {
-    const next = pickReplayPlacements(manuscripts, Math.random, placementsRef.current);
+    const next = pickReplayPlacements(MANUSCRIPT_ANCHORS, Math.random, placementsRef.current);
     const empty = new Set<string>();
     foundRef.current = empty;
     setFound(empty); setCompletedAt(undefined); setPlacements(next);
-    setLetterQueued(false); setReplayed(true); setDialog(null);
+    setLetterQueued(false); setReplayed(true); setDialog(null); setBlocked(new Set());
     local.write(PROGRESS_KEY, serializeProgress({ found: [] }));
     session.write(SESSION_KEY, serializePlacements(next));
   }, []);
+
+  // Runtime-only: anchors that cannot be used at the current size. Cleared on
+  // resize so the original spot gets re-evaluated at the new width.
+  const [blocked, setBlocked] = useState<ReadonlySet<string>>(new Set());
+  const block = useCallback((a: string) => setBlocked((b) => (b.has(a) ? b : new Set(b).add(a))), []);
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout>;
+    let w = window.innerWidth;
+    const on = () => { clearTimeout(t); t = setTimeout(() => { if (window.innerWidth !== w) { w = window.innerWidth; setBlocked(new Set()); } }, 250); };
+    window.addEventListener("resize", on);
+    return () => { clearTimeout(t); window.removeEventListener("resize", on); };
+  }, []);
+  const resolve = useCallback((id: string) => {
+    let a = placements[id];
+    for (let i = 0; a && blocked.has(a) && i < 4; i++) a = ANCHOR_DEFS[a]?.fallback;
+    return a;
+  }, [placements, blocked]);
 
   const queueLetter = useCallback(() => setLetterQueued(true), []);
   useEffect(() => {
@@ -95,7 +116,7 @@ export function ManuscriptProvider({ children }: { children: ReactNode }) {
     return () => clearInterval(t);
   }, [letterQueued]);
 
-  const value = useMemo(() => ({ ready, found, placements, dialog, setDialog, discover, queueLetter, replayed, restart }), [ready, found, placements, dialog, discover, queueLetter, replayed, restart]);
+  const value = useMemo(() => ({ ready, found, placements, dialog, setDialog, discover, queueLetter, replayed, restart, resolve, block }), [ready, found, placements, dialog, discover, queueLetter, replayed, restart, resolve, block]);
   return (
     <ManuscriptContext.Provider value={value}>
       {children}

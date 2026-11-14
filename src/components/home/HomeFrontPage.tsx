@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Divider, Flourish } from "@/components/decor/Ornaments";
 import { useLocale } from "@/i18n/locale";
 import type { Profile } from "@/types/content";
-import { ManuscriptSpot } from "@/components/manuscripts/ManuscriptMarker";
+import { ManuscriptZone } from "@/components/manuscripts/ManuscriptMarker";
 import { NewspaperMasthead } from "./NewspaperMasthead";
 import { NewspaperPortrait } from "./NewspaperPortrait";
 
@@ -27,11 +27,12 @@ export function HomeFrontPage({ profile, linkedInUrl }: Props) {
         <Flourish className="pointer-events-none absolute right-2 top-2 h-8 w-8 rotate-90 text-paper-muted/60" />
         <Flourish className="pointer-events-none absolute bottom-2 left-2 h-8 w-8 -rotate-90 text-paper-muted/60" />
         <Flourish className="pointer-events-none absolute bottom-2 right-2 h-8 w-8 rotate-180 text-paper-muted/60" />
-        <ManuscriptSpot section="home" />
+        <ManuscriptZone host="home:page" />
 
         <NewspaperMasthead />
 
-        <header className="headline-hover mt-8 border-b border-rule pb-6 text-center">
+        <header className="headline-hover relative mt-8 border-b border-rule pb-6 text-center">
+          <ManuscriptZone host="home:headline" />
           <h1 id="home-title" className="font-display text-5xl font-semibold leading-[0.95] tracking-tight sm:text-7xl">
             {profile.name}
           </h1>
@@ -42,7 +43,8 @@ export function HomeFrontPage({ profile, linkedInUrl }: Props) {
 
         <div className="mt-6 grid gap-8 md:grid-cols-[1fr_17rem] lg:grid-cols-[1fr_19rem] md:gap-10">
           <NewspaperPortrait portrait={profile.portrait} />
-          <div className="md:order-first md:border-r md:border-rule md:pr-10">
+          <div className="relative md:order-first md:border-r md:border-rule md:pr-10">
+            <ManuscriptZone host="home:column" />
             <h2 className="font-masthead text-sm uppercase tracking-[0.25em] text-paper-muted">
               {t.home.profileHeading} · {profile.location[locale]}
             </h2>

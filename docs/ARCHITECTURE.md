@@ -70,3 +70,11 @@ Replace imports from `src/content` in `PortfolioPage` with a loader/query that r
 - `ManuscriptSpot section=…` sits inside each section's `relative` container; `BookManuscript` renders Nº 05 beside the fleuron of one randomly chosen book, with an inline panel whose Escape is captured on `window` so the book stays open.
 - `ManuscriptLayer` — note dialog (focus returns to the section heading), bottom-left collection counter + overview, final letter.
 - Replay: the collection offers "Play Again" (complete) / "Restart Exploration" (in progress) behind an inline confirmation. `restart()` writes empty progress and a new arrangement from `pickReplayPlacements` (guarantees at least one changed anchor when possible), then shows the counter at 00/07.
+
+
+## Lost Manuscripts placement (v2)
+
+- `components/manuscripts/anchors.ts` builds the registry of hiding places (`host@position`) from content: experience entries, skill drawers, decor books, project books (fleuron, info page, media page), journal slots.
+- `ManuscriptZone` renders markers whose resolved anchor belongs to its host. Hosts inside unmounted tabs or inactive (`inert`) slides simply wait; nothing moves.
+- `collision.ts` validates the full marker box (+4px) against text, images and focusable targets in its section/dialog, clipping containers, and collapsed hosts. A blocked anchor resolves through its `fallback` chain for the current width only.
+- `placement.ts` picks a host first, then a position, avoiding the previous exploration's host and anchor on replay. Placements are stored as version 2; older entries are redrawn without touching progress.

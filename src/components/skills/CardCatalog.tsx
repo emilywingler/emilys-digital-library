@@ -1,6 +1,7 @@
 import * as Tabs from "@radix-ui/react-tabs";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ManuscriptZone } from "@/components/manuscripts/ManuscriptMarker";
 import { BrassPull } from "@/components/decor/BrassPull";
 import type { Locale, SkillCategory } from "@/types/content";
 import { IndexCard, type IndexCardLabels } from "./IndexCard";
@@ -18,7 +19,9 @@ export function CardCatalog({ categories, locale, label, cardLabels, experienceN
   const mobile = useIsMobile();
   return (
     <Tabs.Root value={open} onValueChange={setOpen} activationMode="manual"
-      orientation={mobile ? "horizontal" : "vertical"} className="grid gap-6 md:grid-cols-[15rem_1fr]">
+      orientation={mobile ? "horizontal" : "vertical"} className="relative grid gap-6 md:grid-cols-[15rem_1fr]">
+      {/* Out-of-flow hiding place for the whole catalog (kept outside the tablist). */}
+      <ManuscriptZone host="skills:cabinet" />
       <Tabs.List aria-label={label} className="catalog-cabinet grid grid-cols-2 gap-2 rounded-sm p-2 md:flex md:flex-col md:self-start md:gap-3 md:p-3">
         {categories.map((c, i) => (
           <Tabs.Trigger key={c.id} value={c.id}
@@ -32,7 +35,8 @@ export function CardCatalog({ categories, locale, label, cardLabels, experienceN
         ))}
       </Tabs.List>
       {categories.map((c) => (
-        <Tabs.Content key={c.id} value={c.id} className="catalog-drawer focus-visible:outline-none" lang={locale === "pt" ? "pt-BR" : "en"}>
+        <Tabs.Content key={c.id} value={c.id} className="catalog-drawer relative focus-visible:outline-none" lang={locale === "pt" ? "pt-BR" : "en"}>
+          <ManuscriptZone host={`skills:${c.id}`} />
           <ul className="grid gap-4 sm:grid-cols-2">
             {c.skills.map((s) => (
               <IndexCard key={s.code} skill={s} locale={locale} labels={cardLabels} experienceNames={experienceNames} />

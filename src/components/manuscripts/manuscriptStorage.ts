@@ -6,6 +6,8 @@
  * feature keeps working from in-memory state.
  */
 export const STORAGE_VERSION = 1;
+/** Placements moved to `host@position` anchors in v2; older session entries are redrawn. */
+export const PLACEMENT_VERSION = 2;
 export const PROGRESS_KEY = "wingler:lost-manuscripts";
 export const SESSION_KEY = "wingler:lost-manuscripts:session";
 
@@ -25,7 +27,7 @@ export function parseProgress(raw: string | null, knownIds: readonly string[]): 
 export function parsePlacements(raw: string | null, anchorsById: Readonly<Record<string, readonly string[]>>): Placements {
   try {
     const v = raw ? JSON.parse(raw) : null;
-    if (!v || v.version !== STORAGE_VERSION || typeof v.placements !== "object" || !v.placements) return {};
+    if (!v || v.version !== PLACEMENT_VERSION || typeof v.placements !== "object" || !v.placements) return {};
     const out: Placements = {};
     for (const [id, anchor] of Object.entries(v.placements)) {
       if (typeof anchor === "string" && anchorsById[id]?.includes(anchor)) out[id] = anchor;
@@ -35,7 +37,7 @@ export function parsePlacements(raw: string | null, anchorsById: Readonly<Record
 }
 
 export const serializeProgress = (p: Progress) => JSON.stringify({ version: STORAGE_VERSION, ...p });
-export const serializePlacements = (placements: Placements) => JSON.stringify({ version: STORAGE_VERSION, placements });
+export const serializePlacements = (placements: Placements) => JSON.stringify({ version: PLACEMENT_VERSION, placements });
 
 /** Storage wrapper that disables itself after the first failure. */
 export function safeStore(get: () => Storage | undefined) {
